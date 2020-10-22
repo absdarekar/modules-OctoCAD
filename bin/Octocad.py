@@ -11,7 +11,7 @@ class Octocad():
         self.obj_QMainWindow__ui=QtWidgets.QMainWindow();
         Gui.centering(self.obj_QMainWindow__ui);
         self.obj_HomeGui=HomeGui();
-        self.obj_HomeGui.setupui(self.obj_QMainWindow__ui,OCTOCAD_FILES_PATH);
+        self.obj_HomeGui.setupUi(self.obj_QMainWindow__ui,OCTOCAD_FILES_PATH);
         self.obj_ModuleGui=ModuleGui();
         self.obj_QMainWindow__ui.show();
         self.obj_HomeGui.design.clicked.connect(self.designUi);
@@ -20,7 +20,7 @@ class Octocad():
         self.obj_QMainWindow__designUi=QtWidgets.QMainWindow();
         Gui.centering(self.obj_QMainWindow__designUi);
         self.obj_ModuleGui=ModuleGui();
-        self.obj_ModuleGui.setupui(self.obj_QMainWindow__designUi);
+        self.obj_ModuleGui.setupUi(self.obj_QMainWindow__designUi);
         self.obj_QMainWindow__designUi.setWindowTitle("Design");
         self.obj_QMainWindow__designUi.show();
         self.obj_ModuleGui.spurGear.clicked.connect(Octocad.spurDesign);
@@ -28,7 +28,7 @@ class Octocad():
         self.obj_QMainWindow__modelUi=QtWidgets.QMainWindow();
         Gui.centering(self.obj_QMainWindow__modelUi);
         self.obj_ModuleGui=ModuleGui();
-        self.obj_ModuleGui.setupui(self.obj_QMainWindow__modelUi);
+        self.obj_ModuleGui.setupUi(self.obj_QMainWindow__modelUi);
         self.obj_QMainWindow__modelUi.setWindowTitle("Model");
         self.obj_QMainWindow__modelUi.show();
     def spurDesign():
