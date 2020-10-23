@@ -159,23 +159,23 @@ class Design():
             pinionBendingLoad, gearBendingLoad, safetyFactor, effectiveLoad=self.evalLoad(self.MODULES[i]);
             i+=1;
         wearLoad=effectiveLoad*self.safetyFactorMin;
-        Fw=wearLoad;
-        zp=self.pinionTeeth;
+        wL=wearLoad;
+        pT=self.pinionTeeth;
         m=self.MODULES[i-1];
-        Q=self.gearing;
+        g=self.gearing;
         pA=self.pressureAngle;
-        Ep=self.pinionElasticity;
-        Eg=self.gearElasticity;
+        pE=self.pinionElasticity;
+        gE=self.gearElasticity;
         sinpA=math.sin(math.radians(pA));
         cospA=math.cos(math.radians(pA));
-        contactStress=math.sqrt((Fw/(10*zp*(math.pow(m,2))*Q))*(1.4/(sinpA*cospA*((1/Ep)+(1/Eg)))));
+        contactStress=math.sqrt((wL/(10*pT*(math.pow(m,2))*g))*(1.4/(sinpA*cospA*((1/pE)+(1/gE)))));
         caseHardness=contactStress/2.65;
-        print(m)
-        print(safetyFactor)
-        print(self.safetyFactorMin)
-        print(gearBendingLoad)
-        print(pinionBendingLoad)
-        print(effectiveLoad)
-        print(wearLoad)
-        print(contactStress)
-        print(caseHardness)
+
+        print("Module "+str(m))
+        print("Factor of safety available "+str(safetyFactor))
+        print("Factor of safety required "+str(self.safetyFactorMin))
+        print("Effective load on gear pair "+str(effectiveLoad))
+        print("Bending load capacity of pinion "+str(pinionBendingLoad))
+        print("Bending load capacity of gear "+str(gearBendingLoad))
+        print("Wear load capacity of gear pair "+str(wearLoad))
+        print("Case hardness of the gear pair "+str(caseHardness))
