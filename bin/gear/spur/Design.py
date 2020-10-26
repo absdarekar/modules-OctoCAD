@@ -41,9 +41,9 @@ class Design():
         self.pressureAngle=float(profile["pressureAngle"]);
     def evalGearing(self,gearing,gearTeeth,pinionTeeth):
         if gearing=="Internal gearing":
-            return ((2*gearTeeth/pinionTeeth)/(gearTeeth/pinionTeeth)-1);
+            return ((2*gearTeeth/pinionTeeth)/((gearTeeth/pinionTeeth)-1));
         if gearing=="External gearing":
-            return ((2*gearTeeth/pinionTeeth)/(gearTeeth/pinionTeeth)+1);
+            return ((2*gearTeeth/pinionTeeth)/((gearTeeth/pinionTeeth)+1));
     def evalProfile(self,profile):
         if profile=="14.5 degree full depth involute tooth":
             return {
