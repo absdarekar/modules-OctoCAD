@@ -1,22 +1,33 @@
-import sys;
-import os;
-OCTOCAD_FILES_PATH=os.path.join(os.path.expanduser('~'),'OctoCAD');
-sys.path.insert(1,OCTOCAD_FILES_PATH);
+import math;
 from PyQt5 import QtCore, QtGui, QtWidgets;
 from gui.Gui import Gui;
 from gui.gear.spur.DesignGui import DesignGui;
-import math;
+from gui.octocad.OutputGui import OutputGui;
+from bin.Octocad import OCTOCAD_APPDATA_PATH, OCTOCAD_FILES_PATH, saveFile;
+OCTOCAD_SPUR_DESIGN_DATA_PATH=OCTOCAD_APPDATA_PATH+"/gear/spur/design";
 class Design():
-    def ui(self):
+    def setupUi(self):
         self.obj_QDialog__ui=QtWidgets.QDialog();
         Gui.centering(self.obj_QDialog__ui);
         self.obj_DesignGui=DesignGui();
         self.obj_DesignGui.setupUi(self.obj_QDialog__ui);
         self.obj_QDialog__ui.show();
         self.obj_DesignGui.buttonBox.accepted.connect(self.findModule);
+    def setupResultUi(self):
+        self.obj_QMainWindow__setupResultUi=QtWidgets.QMainWindow();
+        Gui.centering(self.obj_QMainWindow__setupResultUi);
+        self.obj_OutputGui=OutputGui();
+        self.obj_OutputGui.setupUi(self.obj_QMainWindow__setupResultUi);
+        self.obj_QMainWindow__setupResultUi.setWindowTitle("Design of spur gear");
+        self.obj_OutputGui.plainTextEdit.setPlainText(open(OCTOCAD_SPUR_DESIGN_DATA_PATH).read());
+        self.obj_QMainWindow__setupResultUi.show();
+        close=self.obj_OutputGui.buttonBox.button(QtWidgets.QDialogButtonBox.Close);
+        close.clicked.connect(self.obj_QMainWindow__setupResultUi.close);
+        save=self.obj_OutputGui.buttonBox.button(QtWidgets.QDialogButtonBox.Save);
+        save.clicked.connect(self.save);
     def getData(self):
-        self.MODULES=[1,1.125,1.25,1.375,1.5,1.75,2,2.25,2.5,2.75,3,3.5,4,
-                4.5,5,5.5,6,6.5,7,8,9,10,11,12,14,16,18,20,22,25,28,32,36,40,45,50];
+        self.MODULES=[1,1.125,1.25,1.375,1.5,1.75,2,2.25,2.5,2.75,3,3.5,4,4.5,5,
+                    5.5,6,6.5,7,8,9,10,11,12,14,16,18,20,22,25,28,32,36,40,45,50];
         self.gearElasticity=float(self.obj_DesignGui.gearElasticity.text());
         self.gearStrength=float(self.obj_DesignGui.gearStrength.text());
         self.gearBendingStress=1/3*self.gearStrength;
@@ -30,63 +41,16 @@ class Design():
         self.safetyFactorMin=float(self.obj_DesignGui.safetyFactor.text());
         self.serviceFactor=float(self.obj_DesignGui.serviceFactor.text());
         gearing=self.obj_DesignGui.gearing.currentText();
-        self.gearing=self.evalGearing(gearing,self.gearTeeth,self.pinionTeeth);
-        grade=self.obj_DesignGui.grade.currentText();
-        self.getGrade(grade);
+        self.gearing, self.gearingType=self.evalGearing(gearing,self.gearTeeth,self.pinionTeeth);
+        self.grade=self.obj_DesignGui.grade.currentText();
+        self.getGrade(self.grade);
         profile=self.obj_DesignGui.profile.currentText();
         profile=self.evalProfile(profile);
         self.deformationFactor=eval(profile["deformationFactor"]);
         self.gearLewisFactor=eval(profile["lewisFactor"]["gear"]);
         self.pinionLewisFactor=eval(profile["lewisFactor"]["pinion"]);
         self.pressureAngle=float(profile["pressureAngle"]);
-    def evalGearing(self,gearing,gearTeeth,pinionTeeth):
-        if gearing=="Internal gearing":
-            return ((2*gearTeeth/pinionTeeth)/((gearTeeth/pinionTeeth)-1));
-        if gearing=="External gearing":
-            return ((2*gearTeeth/pinionTeeth)/((gearTeeth/pinionTeeth)+1));
-    def evalProfile(self,profile):
-        if profile=="14.5 degree full depth involute tooth":
-            return {
-                    "lewisFactor":
-                                    {
-                                        "pinion":
-                                                "0.124-(0.684/self.pinionTeeth)",
-                                        "gear":
-                                                "0.124-(0.684/self.gearTeeth)"
-                                    },
-                    "pressureAngle":
-                                    "14.5",
-                    "deformationFactor":
-                                        "0.107/((1/self.pinionElasticity)+(1/self.gearElasticity))"
-                    }
-        if profile=="20 degree full depth involute tooth":
-            return {
-                    "lewisFactor":
-                                    {
-                                        "pinion":
-                                                "0.154-(0.912/self.pinionTeeth)",
-                                        "gear":
-                                                "0.154-(0.912/self.gearTeeth)"
-                                    },
-                    "pressureAngle":
-                                    "20",
-                    "deformationFactor":
-                                        "0.111/((1/self.pinionElasticity)+(1/self.gearElasticity))"
-                    }
-        if profile=="20 degree stub involute tooth":
-            return {
-                    "lewisFactor":
-                                    {
-                                        "pinion":
-                                                "0.175-(0.95/self.pinionTeeth)",
-                                        "gear":
-                                                "0.175-(0.95/self.gearTeeth)"
-                                    },
-                    "pressureAngle":
-                                    "20",
-                    "deformationFactor":
-                                        "0.115/((1/self.pinionElasticity)+(1/self.gearElasticity))"
-                    }
+        self.profile=profile["profile"];
     def getGrade(self,grade):
         if grade=="1":
             self.constant1=0.8;
@@ -124,6 +88,60 @@ class Design():
         if grade=="12":
             self.constant1=63.0;
             self.constant2=5.0;
+    def evalGearing(self,gearing,gearTeeth,pinionTeeth):
+        if gearing=="Internal gearing":
+            return ((2*gearTeeth/pinionTeeth)/((gearTeeth/pinionTeeth)-1)), "Internal gearing";
+        if gearing=="External gearing":
+            return ((2*gearTeeth/pinionTeeth)/((gearTeeth/pinionTeeth)+1)), "External gearing";
+    def evalProfile(self,profile):
+        if profile=="14.5 degree full depth involute tooth":
+            return {
+                    "lewisFactor":
+                                    {
+                                        "pinion":
+                                                "0.124-(0.684/self.pinionTeeth)",
+                                        "gear":
+                                                "0.124-(0.684/self.gearTeeth)"
+                                    },
+                    "pressureAngle":
+                                    "14.5",
+                    "deformationFactor":
+                                        "0.107/((1/self.pinionElasticity)+(1/self.gearElasticity))",
+                    "profile":
+                              "Full depth involute tooth"
+                    }
+        if profile=="20 degree full depth involute tooth":
+            return {
+                    "lewisFactor":
+                                    {
+                                        "pinion":
+                                                "0.154-(0.912/self.pinionTeeth)",
+                                        "gear":
+                                                "0.154-(0.912/self.gearTeeth)"
+                                    },
+                    "pressureAngle":
+                                    "20",
+                    "deformationFactor":
+                                        "0.111/((1/self.pinionElasticity)+(1/self.gearElasticity))",
+                    "profile":
+                              "Full depth involute tooth"
+                    }
+        if profile=="20 degree stub involute tooth":
+            return {
+                    "lewisFactor":
+                                    {
+                                        "pinion":
+                                                "0.175-(0.95/self.pinionTeeth)",
+                                        "gear":
+                                                "0.175-(0.95/self.gearTeeth)"
+                                    },
+                    "pressureAngle":
+                                    "20",
+                    "deformationFactor":
+                                        "0.115/((1/self.pinionElasticity)+(1/self.gearElasticity))",
+                    "profile":
+                              "Stub involute tooth"
+                    }
     def evalTolerance(self,module,teeth):
         phi=module+0.25*math.sqrt(module*teeth);
         error=self.constant1+self.constant2*phi;
@@ -153,13 +171,14 @@ class Design():
         return pinionBendingLoad, gearBendingLoad, safetyFactor, effectiveLoad;
     def findModule(self):
         self.getData();
-        safetyFactor=0.0;
+        self.safetyFactor=0.0;
         i=0;
-        while(self.safetyFactorMin>=safetyFactor):
-            pinionBendingLoad, gearBendingLoad, safetyFactor, effectiveLoad=self.evalLoad(self.MODULES[i]);
+        while(self.safetyFactorMin>=self.safetyFactor):
+            self.pinionBendingLoad, self.gearBendingLoad, self.safetyFactor, self.effectiveLoad=self.evalLoad(self.MODULES[i]);
             i+=1;
-        wearLoad=effectiveLoad*self.safetyFactorMin;
-        wL=wearLoad;
+        self.module=self.MODULES[i-1];
+        self.wearLoad=self.effectiveLoad*self.safetyFactorMin;
+        wL=self.wearLoad;
         pT=self.pinionTeeth;
         m=self.MODULES[i-1];
         g=self.gearing;
@@ -168,14 +187,37 @@ class Design():
         gE=self.gearElasticity;
         sinpA=math.sin(math.radians(pA));
         cospA=math.cos(math.radians(pA));
-        contactStress=math.sqrt((wL/(10*pT*(math.pow(m,2))*g))*(1.4/(sinpA*cospA*((1/pE)+(1/gE)))));
-        caseHardness=contactStress/2.65;
-
-        print("Module "+str(m))
-        print("Factor of safety available "+str(safetyFactor))
-        print("Factor of safety required "+str(self.safetyFactorMin))
-        print("Effective load on gear pair "+str(effectiveLoad))
-        print("Bending load capacity of pinion "+str(pinionBendingLoad))
-        print("Bending load capacity of gear "+str(gearBendingLoad))
-        print("Wear load capacity of gear pair "+str(wearLoad))
-        print("Case hardness of the gear pair "+str(caseHardness))
+        self.contactStress=math.sqrt((wL/(10*pT*(math.pow(m,2))*g))*(1.4/(sinpA*cospA*((1/pE)+(1/gE)))));
+        self.caseHardness=self.contactStress/2.65;
+        self.createResult();
+    def createResult(self):
+        with open(OCTOCAD_SPUR_DESIGN_DATA_PATH,"w+") as design_f:
+            with open(OCTOCAD_FILES_PATH+"/LICENSE.md","r") as license_f:
+                design_f.write(license_f.read());
+                design_f.write("\n\n\nDesign of spur gear for given design data:\n\n\n");
+                design_f.write("Ultimate tensile strength of pinion is "+str(self.pinionStrength)+" N.mm^-2\n\n");
+                design_f.write("Ultimate tensile strength of gear is "+str(self.gearStrength)+" N.mm^-2\n\n");
+                design_f.write("Modulus of elasticity of pinion is "+str(self.pinionElasticity)+" N.mm^-2\n\n");
+                design_f.write("Modulus of elasticity of gear is "+str(self.gearElasticity)+" N.mm^-2\n\n");
+                design_f.write("Grade of gear pair is "+str(self.grade)+"\n\n");
+                design_f.write("Pressure angle of gear pair is "+str(self.pressureAngle)+" degree\n\n");
+                design_f.write(self.profile+"\n\n");
+                design_f.write(self.gearingType+"\n\n");
+                design_f.write("Number of pinion teeth is "+str(self.pinionTeeth)+"\n\n");
+                design_f.write("Number of gear teeth is "+str(self.gearTeeth)+"\n\n");
+                design_f.write("Power transmitted by gear pair is "+str(+self.power)+" W\n\n");
+                design_f.write("Speed of rotation of pinion is "+str(self.pinionRpm)+" rpm\n\n");
+                design_f.write("Required factor of safety is "+str(self.safetyFactorMin)+"\n\n");
+                design_f.write("Service factor is "+str(self.serviceFactor)+"\n\n");
+                design_f.write("\n\n\nParameters for gear pair satisfying given design requirments:\n\n\n");
+                design_f.write("Module is "+str(self.module)+" mm\n\n");
+                design_f.write("Available factor of safety  is "+str(self.safetyFactor)+"\n\n");
+                design_f.write("Effective load on gear pair is "+str(self.effectiveLoad)+" N\n\n");
+                design_f.write("Bending load capacity of pinion is "+str(self.pinionBendingLoad)+" N\n\n");
+                design_f.write("Bending load capacity of gear is "+str(self.gearBendingLoad)+" N\n\n");
+                design_f.write("Wear load capacity of gear pair is "+str(self.wearLoad)+" N\n\n");
+                design_f.write("Required case hardness of the gear pair is "+str(self.caseHardness)+" BHN\n\n");
+                design_f.write("\n\n\nFor technical summary refer https://github.com/absdarekar/OctoCAD/blob/master/doc/gear/spur/Technical-Summary.pdf");
+        self.setupResultUi();
+    def save(self):
+        saveFile(OCTOCAD_SPUR_DESIGN_DATA_PATH);
