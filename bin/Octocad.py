@@ -1,11 +1,11 @@
-import sys;
 import os;
+import sys;
+from PyQt5 import QtCore, QtGui, QtWidgets;
+from PyQt5.QtWidgets import QFileDialog;
 OCTOCAD_FILES_PATH=os.path.join(os.path.expanduser('~'),'OctoCAD');
 OCTOCAD_APPDATA_PATH=os.path.join(os.path.expanduser('~'),'.OctoCAD');
 os.makedirs(OCTOCAD_APPDATA_PATH,exist_ok=True);
 sys.path.insert(1,OCTOCAD_FILES_PATH);
-from PyQt5 import QtCore, QtGui, QtWidgets;
-from PyQt5.QtWidgets import QFileDialog;
 from gui.Gui import Gui;
 from gui.octocad.HomeGui import HomeGui;
 from gui.octocad.ModuleGui import ModuleGui;
