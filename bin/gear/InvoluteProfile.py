@@ -47,9 +47,9 @@ faceWidth=10*MODULE;
 baseRadius=MODULE*TEETH*math.cos(PRESSURE_ANGLE)/2;
 addendumRadius=(MODULE*TEETH+2*MODULE)/2;
 dedendumRadius=(MODULE*TEETH-2.5*MODULE)/2;
-clearance=0.25*MODULE; # 20 degree full depth involute profile
-filletRadius=0.15*MODULE # should not exceed clearance
-angularSeperation=math.pi/(2*TEETH);
+clearance=0.5*MODULE; # 20 degree full depth involute profile
+filletRadius=0.25*MODULE # should not exceed clearance
+angularSeperation=math.pi/(2*TEETH)-(math.tan(PRESSURE_ANGLE)-PRESSURE_ANGLE);
 ratioAddendum=addendumRadius/baseRadius;
 ratioDedendum=dedendumRadius/baseRadius;
 height=FreeCAD.Vector(0,0,faceWidth);
@@ -86,8 +86,12 @@ filletLeftCenter.move(FreeCAD.Vector(xInvLeft[0]-clearance+filletRadius,\
                         yInvLeft[0]+filletRadius,0));
 filletRightCenter.move(FreeCAD.Vector(xInvRight[0]-clearance+filletRadius,\
                         yInvRight[0]-filletRadius,0));
-filletLeft=Draft.makeCircle(filletRadius,filletLeftCenter,False,180,270);
-filletRight=Draft.makeCircle(filletRadius,filletRightCenter,False,90,180);
+startangle=180;
+endangle=270;
+filletLeft=Draft.makeCircle(filletRadius,filletLeftCenter,WIRE_FRAME,startangle,endangle);
+startangle=90;
+endangle=180;
+filletRight=Draft.makeCircle(filletRadius,filletRightCenter,WIRE_FRAME,startangle,endangle);
 radius=math.sqrt(xInvLeft[len(xInvLeft)-1]**2+yInvLeft[len(xInvLeft)-1]**2);
 arcAngle=math.atan(yInvLeft[len(xInvLeft)-1]/xInvLeft[len(xInvLeft)-1])*180/math.pi;
 startangle=arcAngle;
