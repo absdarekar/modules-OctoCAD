@@ -35,8 +35,8 @@ class Model():
         self.faceWidth=float(self.obj_ModelGui.faceWidth.text());
         self.clearance=float(self.obj_ModelGui.clearance.text());
         self.fillet=float(self.obj_ModelGui.fillet.text());
-        self.fileName=self.gear+" "+self.profileType+str(self.module)+"x"+\
-                        str(self.teeth)+self.gearing+" "+str(self.faceWidth)+\
+        self.fileName=self.gear+" "+self.profileType+" "+str(self.module)+"x"+\
+                        str(self.teeth)+" "+self.gearing+" "+str(self.faceWidth)+\
                         " "+str(self.clearance)+" "+str(self.fillet);
         self.generateModel();
 if __name__=="__main__":
