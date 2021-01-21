@@ -51,9 +51,9 @@ class DesignData():
                     "lewisFactor":
                                     {
                                         "pinion":
-                                                "0.124-(0.684/self.pinionTeeth)",
+                                                "0.124-(0.684/pinionTeeth)",
                                         "gear":
-                                                "0.124-(0.684/self.gearTeeth)"
+                                                "0.124-(0.684/gearTeeth)"
                                     },
                     "pressureAngle":
                                     "14.5",
@@ -67,9 +67,9 @@ class DesignData():
                     "lewisFactor":
                                     {
                                         "pinion":
-                                                "0.154-(0.912/self.pinionTeeth)",
+                                                "0.154-(0.912/pinionTeeth)",
                                         "gear":
-                                                "0.154-(0.912/self.gearTeeth)"
+                                                "0.154-(0.912/gearTeeth)"
                                     },
                     "pressureAngle":
                                     "20",
@@ -83,9 +83,9 @@ class DesignData():
                     "lewisFactor":
                                     {
                                         "pinion":
-                                                "0.175-(0.95/self.pinionTeeth)",
+                                                "0.175-(0.95/pinionTeeth)",
                                         "gear":
-                                                "0.175-(0.95/self.gearTeeth)"
+                                                "0.175-(0.95/gearTeeth)"
                                     },
                     "pressureAngle":
                                     "20",
