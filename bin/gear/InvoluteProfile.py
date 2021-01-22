@@ -21,10 +21,7 @@ class InvoluteProfile():
         return xMean;
     def evalInv(radiusRatio,x):
         return eval("radiusRatio-math.cos(x)-x*math.sin(x)");
-    def generateProfile(pressureAngle,module,teeth,faceWidth,clearance,fillet):
-        ORIGIN=FreeCAD.Vector(0,0,0);
-        ZAXIS=FreeCAD.Vector(0,0,1);
-        COPY=True;
+    def generateHob(baseRadius,addendumRadius,dedendumRadius,angularSeperation,clearance,filletRadius,sign):
         CLOSED=True;
         OPEN=False;
         FACE=True;
@@ -32,16 +29,6 @@ class InvoluteProfile():
         PLACEMENT=None
         DELETE=True;
         PRECISION=0.001;
-        pressureAngle=math.radians(pressureAngle);
-        baseRadius=module*teeth*math.cos(pressureAngle)/2;
-        addendumRadius=(module*teeth+2*module)/2;
-        dedendumRadius=(module*teeth-2.5*module)/2;
-        angularSeperation=math.pi/(2*teeth)-(math.tan(pressureAngle)-pressureAngle);
-        faceWidth=faceWidth*module;
-        clearance=clearance*module;
-        filletRadius=fillet*module;
-        angle=360/teeth;
-        height=FreeCAD.Vector(0,0,faceWidth);
         ratioAddendum=addendumRadius/baseRadius;
         ratioDedendum=dedendumRadius/baseRadius;
         t=numpy.arange(InvoluteProfile.calculateRange(ratioDedendum),\
@@ -55,7 +42,6 @@ class InvoluteProfile():
         for i in range(len(t)):
             InvLeftVector.append(FreeCAD.Vector(xInvLeft[i],yInvLeft[i],0));
             InvRightVector.append(FreeCAD.Vector(xInvRight[i],yInvRight[i],0));
-        addendumCirle=Draft.makeCircle(addendumRadius);
         InvLeft=Draft.makeBSpline(Part.makePolygon(InvLeftVector),OPEN,WIRE_FRAME);
         InvRight=Draft.makeBSpline(Part.makePolygon(InvRightVector),OPEN,WIRE_FRAME);
         clearanceLeftX=FreeCAD.Vector(xInvLeft[0]-clearance+filletRadius,yInvLeft[0],0);
@@ -78,19 +64,52 @@ class InvoluteProfile():
         endangle=180;
         filletRight=Draft.makeCircle(filletRadius,filletRightCenter,WIRE_FRAME,startangle,endangle);
         radius=math.sqrt(xInvLeft[len(xInvLeft)-1]**2+yInvLeft[len(xInvLeft)-1]**2);
-        arcAngle=math.atan(yInvLeft[len(xInvLeft)-1]/xInvLeft[len(xInvLeft)-1])*180/math.pi;
+        arcAngle=sign*(math.atan(yInvLeft[len(xInvLeft)-1]/xInvLeft[len(xInvLeft)-1])*180/math.pi);
         startangle=arcAngle;
         endangle=-arcAngle;
         arc=Draft.makeCircle(radius,PLACEMENT,WIRE_FRAME,startangle,endangle);
-        cutWire, deletedFeatures=Draft.upgrade([arc,lineRight,lineLeft,lineClearance,\
+        hobWire, deletedFeatures=Draft.upgrade([arc,lineRight,lineLeft,lineClearance,\
                                                 InvRight,InvLeft,filletRight,filletLeft],DELETE);
-        cutFace, deletedFeatures=Draft.upgrade(cutWire,DELETE);
-        cutFaces=[]
-        cutFaces.append(cutFace[0]);
+        hobFace, deletedFeatures=Draft.upgrade(hobWire,DELETE);
+        return hobFace[0];
+    def generateTooth(pressureAngle,module,teeth,clearance,fillet):
+        SIGN=-1;
+        pressureAngle=math.radians(pressureAngle);
+        baseRadius=module*teeth*math.cos(pressureAngle)/2;
+        addendumRadius=(module*teeth+2*module)/2;
+        dedendumRadius=(module*teeth-2.5*module)/2;
+        angularSeperation=SIGN*(math.pi/(2*teeth)+(math.tan(pressureAngle)-pressureAngle));
+        clearance=clearance*module;
+        filletRadius=fillet*module;
+        toothFace=InvoluteProfile.generateHob(baseRadius,addendumRadius,\
+                                            dedendumRadius,angularSeperation,\
+                                            clearance,filletRadius,SIGN);
+        return toothFace;
+    def generateProfile(pressureAngle,module,teeth,faceWidth,clearance,fillet):
+        ORIGIN=FreeCAD.Vector(0,0,0);
+        ZAXIS=FreeCAD.Vector(0,0,1);
+        COPY=True;
+        SIGN=+1;
+        pressureAngle=math.radians(pressureAngle);
+        baseRadius=module*teeth*math.cos(pressureAngle)/2;
+        addendumRadius=(module*teeth+2*module)/2;
+        dedendumRadius=(module*teeth-2.5*module)/2;
+        angularSeperation=SIGN*(math.pi/(2*teeth)-(math.tan(pressureAngle)-pressureAngle));
+        faceWidth=faceWidth*module;
+        clearance=clearance*module;
+        filletRadius=fillet*module;
+        addendumCirle=Draft.makeCircle(addendumRadius);
+        hobFace=InvoluteProfile.generateHob(baseRadius,addendumRadius,\
+                                            dedendumRadius,angularSeperation,\
+                                            clearance,filletRadius,SIGN);
+        hobFaces=[]
+        hobFaces.append(hobFace);
+        angle=360/teeth;
         while(angle<360):
-            cutFaces.append(Draft.rotate(cutFaces[0],angle,ORIGIN,ZAXIS,COPY));
+            hobFaces.append(Draft.rotate(hobFaces[0],angle,ORIGIN,ZAXIS,COPY));
             angle+=360/teeth;
         profile=addendumCirle;
-        for i in range(len(cutFaces)):
-            profile=Draft.cut(profile,cutFaces[i]);
+        for i in range(len(hobFaces)):
+            profile=Draft.cut(profile,hobFaces[i]);
+        height=FreeCAD.Vector(0,0,faceWidth);
         return profile, height;

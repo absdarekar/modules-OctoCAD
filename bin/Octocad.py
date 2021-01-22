@@ -37,6 +37,7 @@ class Octocad():
         self.obj_QMainWindow__setupModelUi.show();
         self.obj_ModuleGui.spurGear.clicked.connect(self.modelSpur);
         self.obj_ModuleGui.helicalGear.clicked.connect(self.modelHelical);
+        self.obj_ModuleGui.wormGear.clicked.connect(self.modelWorm);
     def designSpur(self):
         from bin.gear.spur.Design import Design;
         os.makedirs(OCTOCAD_APPDATA_PATH+"/gear/spur",exist_ok=True);
@@ -51,6 +52,8 @@ class Octocad():
         os.system("freecad "+OCTOCAD_FILES_PATH+"/bin/gear/spur/Model.py");
     def modelHelical(self):
         os.system("freecad "+OCTOCAD_FILES_PATH+"/bin/gear/helical/Model.py");
+    def modelWorm(self):
+        os.system("freecad "+OCTOCAD_FILES_PATH+"/bin/gear/worm/Model.py");
 if __name__=="__main__":
     obj_QApplication=QtWidgets.QApplication(sys.argv);
     obj_Octocad=Octocad();
