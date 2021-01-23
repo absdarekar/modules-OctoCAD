@@ -24,6 +24,8 @@ class Model():
                                                         self.faceWidth,\
                                                         self.clearance,self.fillet);
         profileExtrude=Draft.extrude(profile,height);
+        FreeCADGui.ActiveDocument.getObject(profile.Name).Visibility=False;
+        doc.recompute();
     def getData(self):
         self.gear="Spur";
         self.profileType=self.obj_ModelGui.profile.currentText();

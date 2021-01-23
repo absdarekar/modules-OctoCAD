@@ -24,18 +24,19 @@ class Model():
         pitch=math.pi*self.module*self.teeth/math.tan(self.helixAngle);
         pitchRadius=self.module*self.teeth/2;
         helix=Part.makeHelix(pitch,self.faceWidth*self.module,pitchRadius);
-        helixPartFeature=doc.addObject("Part::Feature","Helix");
-        helixPartFeature.Shape=helix;
-        profileSweepFeature=doc.addObject("Part::Sweep","Helical Gear");
+        doc.addObject("Part::Feature","helix");
+        doc.helix.Shape=helix;
+        doc.addObject("Part::Sweep","helicalGear");
         profile, height=InvoluteProfile.generateProfile(self.pressureAngle,\
                                                         self.module,self.teeth,\
                                                         self.faceWidth,\
                                                         self.clearance,self.fillet);
-        profileSweepFeature.Sections=doc.findObjects("Part::Feature",profile.Name);
-        profileSweepFeature.Spine=helixPartFeature;
-        profileSweepFeature.Solid=True;
-        profileSweepFeature.Frenet=True;
-        FreeCADGui.ActiveDocument.getObject("Helix").Visibility=False;
+        doc.helicalGear.Sections=doc.findObjects("Part::Feature",profile.Name);
+        doc.helicalGear.Spine=doc.helix;
+        doc.helicalGear.Solid=True;
+        doc.helicalGear.Frenet=True;
+        FreeCADGui.ActiveDocument.getObject(profile.Name).Visibility=False;
+        FreeCADGui.ActiveDocument.getObject("helix").Visibility=False;
         doc.recompute();
     def getData(self):
         self.gear="Helical";
