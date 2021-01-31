@@ -3,7 +3,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets;
 from gui.Gui import Gui;
 from gui.gear.helical.DesignGui import DesignGui;
 from gui.octocad.OutputGui import OutputGui;
-from bin.Menu import Menu;
+from bin.Utility import Utility;
 from bin.Octocad import OCTOCAD_APPDATA_PATH, OCTOCAD_FILES_PATH;
 from bin.gear.DesignData import DesignData;
 OCTOCAD_HELICAL_DESIGN_DATA_PATH=OCTOCAD_APPDATA_PATH+"/gear/helical/design";
@@ -145,4 +145,4 @@ class Design():
                 design_f.write("\n\n\nFor technical summary refer "+URL);
         self.setupResultUi();
     def save(self):
-        Menu.saveFile(OCTOCAD_HELICAL_DESIGN_DATA_PATH);
+        Utility.saveFile(OCTOCAD_HELICAL_DESIGN_DATA_PATH);

@@ -8,6 +8,7 @@ sys.path.insert(1,OCTOCAD_FILES_PATH);
 from gui.Gui import Gui;
 from gui.octocad.HomeGui import HomeGui;
 from gui.octocad.ModuleGui import ModuleGui;
+from bin.Utility import Utility;
 class Octocad():
     def setupUi(self):
         self.obj_QMainWindow__ui=QtWidgets.QMainWindow();
@@ -48,11 +49,23 @@ class Octocad():
         self.obj_Design__designSpur=Design();
         self.obj_Design__designSpur.setupUi();
     def modelSpur(self):
-        os.system("freecad "+OCTOCAD_FILES_PATH+"/bin/gear/spur/Model.py");
+        FILE_PATH=OCTOCAD_FILES_PATH+"/bin/gear/spur/Model.py";
+        THREAD_NAME="modelSpur";
+        modelUi=self.obj_QMainWindow__setupModelUi;
+        octocadUi=self.obj_QMainWindow__ui;
+        Utility.createThread(FILE_PATH,THREAD_NAME,modelUi,octocadUi);
     def modelHelical(self):
-        os.system("freecad "+OCTOCAD_FILES_PATH+"/bin/gear/helical/Model.py");
+        FILE_PATH=OCTOCAD_FILES_PATH+"/bin/gear/helical/Model.py";
+        THREAD_NAME="modelHelical";
+        modelUi=self.obj_QMainWindow__setupModelUi;
+        octocadUi=self.obj_QMainWindow__ui;
+        Utility.createThread(FILE_PATH,THREAD_NAME,modelUi,octocadUi);
     def modelWorm(self):
-        os.system("freecad "+OCTOCAD_FILES_PATH+"/bin/gear/worm/Model.py");
+        FILE_PATH=OCTOCAD_FILES_PATH+"/bin/gear/worm/Model.py";
+        THREAD_NAME="modelWorm";
+        modelUi=self.obj_QMainWindow__setupModelUi;
+        octocadUi=self.obj_QMainWindow__ui;
+        Utility.createThread(FILE_PATH,THREAD_NAME,modelUi,octocadUi);
 if __name__=="__main__":
     obj_QApplication=QtWidgets.QApplication(sys.argv);
     obj_Octocad=Octocad();
