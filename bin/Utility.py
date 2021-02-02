@@ -14,7 +14,7 @@ class Utility():
             with open(path,"r") as appData_f:
                 data=appData_f.read();
                 file_f.write(data);
-    def createThread(arg,threadName,modelUi,octocadUi):
+    def createThread(arg,threadName,modelUi=None,octocadUi=None):
         if(isinstance(arg,str)):
             execute=lambda:os.system("freecad "+arg);
             thread=threading.Thread(target=execute,name=threadName);
