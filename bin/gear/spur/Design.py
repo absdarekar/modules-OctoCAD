@@ -1,6 +1,5 @@
 import math;
 from PyQt5 import QtCore, QtGui, QtWidgets;
-from gui.Gui import Gui;
 from gui.gear.spur.DesignGui import DesignGui;
 from gui.octocad.OutputGui import OutputGui;
 from bin.Utility import Utility;
@@ -10,14 +9,14 @@ OCTOCAD_SPUR_DESIGN_DATA_PATH=OCTOCAD_APPDATA_PATH+"/gear/spur/design";
 class Design():
     def setupUi(self):
         self.obj_QDialog__ui=QtWidgets.QDialog();
-        Gui.centering(self.obj_QDialog__ui);
+        Utility.alignToCenter(self.obj_QDialog__ui);
         self.obj_DesignGui=DesignGui();
         self.obj_DesignGui.setupUi(self.obj_QDialog__ui);
         self.obj_QDialog__ui.show();
         self.obj_DesignGui.buttonBox.accepted.connect(self.findModule);
     def setupResultUi(self):
         self.obj_QMainWindow__setupResultUi=QtWidgets.QMainWindow();
-        Gui.centering(self.obj_QMainWindow__setupResultUi);
+        Utility.alignToCenter(self.obj_QMainWindow__setupResultUi);
         self.obj_OutputGui=OutputGui();
         self.obj_OutputGui.setupUi(self.obj_QMainWindow__setupResultUi);
         self.obj_QMainWindow__setupResultUi.setWindowTitle("Design of spur gear");

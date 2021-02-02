@@ -5,14 +5,13 @@ OCTOCAD_FILES_PATH=os.path.join(os.path.expanduser('~'),'OctoCAD');
 OCTOCAD_APPDATA_PATH=os.path.join(os.path.expanduser('~'),'.OctoCAD');
 os.makedirs(OCTOCAD_APPDATA_PATH,exist_ok=True);
 sys.path.insert(1,OCTOCAD_FILES_PATH);
-from gui.Gui import Gui;
 from gui.octocad.HomeGui import HomeGui;
 from gui.octocad.ModuleGui import ModuleGui;
 from bin.Utility import Utility;
 class Octocad():
     def setupUi(self):
         self.obj_QMainWindow__ui=QtWidgets.QMainWindow();
-        Gui.centering(self.obj_QMainWindow__ui);
+        Utility.alignToCenter(self.obj_QMainWindow__ui);
         self.obj_HomeGui=HomeGui();
         self.obj_HomeGui.setupUi(self.obj_QMainWindow__ui,OCTOCAD_FILES_PATH);
         self.obj_ModuleGui=ModuleGui();
@@ -21,7 +20,7 @@ class Octocad():
         self.obj_HomeGui.model.clicked.connect(self.setupModelUi);
     def setupDesignUi(self):
         self.obj_QMainWindow__setupDesignUi=QtWidgets.QMainWindow();
-        Gui.centering(self.obj_QMainWindow__setupDesignUi);
+        Utility.alignToCenter(self.obj_QMainWindow__setupDesignUi);
         self.obj_ModuleGui=ModuleGui();
         self.obj_ModuleGui.setupUi(self.obj_QMainWindow__setupDesignUi);
         self.obj_QMainWindow__setupDesignUi.setWindowTitle("Design");
@@ -30,7 +29,7 @@ class Octocad():
         self.obj_ModuleGui.helicalGear.clicked.connect(self.designHelical);
     def setupModelUi(self):
         self.obj_QMainWindow__setupModelUi=QtWidgets.QMainWindow();
-        Gui.centering(self.obj_QMainWindow__setupModelUi);
+        Utility.alignToCenter(self.obj_QMainWindow__setupModelUi);
         self.obj_ModuleGui=ModuleGui();
         self.obj_ModuleGui.setupUi(self.obj_QMainWindow__setupModelUi);
         self.obj_QMainWindow__setupModelUi.setWindowTitle("Model");

@@ -7,14 +7,14 @@ import FreeCADGui;
 import Part;
 OCTOCAD_FILES_PATH=os.path.join(os.path.expanduser('~'),'OctoCAD');
 sys.path.insert(1,OCTOCAD_FILES_PATH);
-from gui.Gui import Gui;
 from gui.gear.helical.ModelGui import ModelGui;
+from bin.Utility import Utility;
 from bin.gear.DesignData import DesignData;
 from bin.gear.InvoluteProfile import InvoluteProfile;
 class Model():
     def setupUi(self):
         self.obj_QDialog__ui=QtWidgets.QDialog();
-        Gui.centering(self.obj_QDialog__ui);
+        Utility.alignToCenter(self.obj_QDialog__ui);
         self.obj_ModelGui=ModelGui();
         self.obj_ModelGui.setupUi(self.obj_QDialog__ui);
         self.obj_QDialog__ui.show();
