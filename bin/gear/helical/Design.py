@@ -8,46 +8,46 @@ from bin.gear.DesignData import DesignData;
 OCTOCAD_HELICAL_DESIGN_DATA_PATH=OCTOCAD_APPDATA_PATH+"/gear/helical/design";
 class Design():
     def setupUi(self):
-        self.obj_QDialog__ui=QtWidgets.QDialog();
-        Utility.alignToCenter(self.obj_QDialog__ui);
-        self.obj_DesignGui=DesignGui();
-        self.obj_DesignGui.setupUi(self.obj_QDialog__ui);
-        self.obj_QDialog__ui.show();
-        self.obj_DesignGui.buttonBox.accepted.connect(self.findModule);
-    def setupResultUi(self):
-        self.obj_QMainWindow__setupResultUi=QtWidgets.QMainWindow();
-        Utility.alignToCenter(self.obj_QMainWindow__setupResultUi);
-        self.obj_OutputGui=OutputGui();
-        self.obj_OutputGui.setupUi(self.obj_QMainWindow__setupResultUi);
-        self.obj_QMainWindow__setupResultUi.setWindowTitle("Design of helical gear");
-        self.obj_OutputGui.plainTextEdit.setPlainText(open(OCTOCAD_HELICAL_DESIGN_DATA_PATH).read());
-        self.obj_QMainWindow__setupResultUi.show();
-        close=self.obj_OutputGui.buttonBox.button(QtWidgets.QDialogButtonBox.Close);
-        close.clicked.connect(self.obj_QMainWindow__setupResultUi.close);
-        save=self.obj_OutputGui.buttonBox.button(QtWidgets.QDialogButtonBox.Save);
+        self.dialog=QtWidgets.QDialog();
+        Utility.alignToCenter(self.dialog);
+        self.designGui=DesignGui();
+        self.designGui.setupUi(self.dialog);
+        self.dialog.show();
+        self.designGui.buttonBox.accepted.connect(self.findModule);
+    def setupOutputUi(self):
+        self.outputWindow=QtWidgets.QMainWindow();
+        Utility.alignToCenter(self.outputWindow);
+        self.outputGui=OutputGui();
+        self.outputGui.setupUi(self.outputWindow);
+        self.outputWindow.setWindowTitle("Design of helical gear");
+        self.outputGui.plainTextEdit.setPlainText(open(OCTOCAD_HELICAL_DESIGN_DATA_PATH).read());
+        self.outputWindow.show();
+        close=self.outputGui.buttonBox.button(QtWidgets.QDialogButtonBox.Close);
+        close.clicked.connect(self.outputWindow.close);
+        save=self.outputGui.buttonBox.button(QtWidgets.QDialogButtonBox.Save);
         save.clicked.connect(self.save);
     def getData(self):
-        self.helixAngle=float(self.obj_DesignGui.helixAngle.text());
-        self.gearElasticity=float(self.obj_DesignGui.gearElasticity.text());
-        self.gearStrength=float(self.obj_DesignGui.gearStrength.text());
+        self.helixAngle=float(self.designGui.helixAngle.text());
+        self.gearElasticity=float(self.designGui.gearElasticity.text());
+        self.gearStrength=float(self.designGui.gearStrength.text());
         self.gearBendingStress=1/3*self.gearStrength;
-        self.gearTeeth=float(self.obj_DesignGui.gearTeeth.text());
+        self.gearTeeth=float(self.designGui.gearTeeth.text());
         gearTeeth=self.gearTeeth;
         self.gearVirtualTeeth=gearTeeth/math.pow(math.cos(math.radians(self.helixAngle)),3);
-        self.pinionElasticity=float(self.obj_DesignGui.pinionElasticity.text());
-        self.pinionRpm=float(self.obj_DesignGui.pinionRpm.text());
-        self.pinionStrength=float(self.obj_DesignGui.pinionStrength.text());
+        self.pinionElasticity=float(self.designGui.pinionElasticity.text());
+        self.pinionRpm=float(self.designGui.pinionRpm.text());
+        self.pinionStrength=float(self.designGui.pinionStrength.text());
         self.pinionBendingStress=1/3*self.pinionStrength;
-        self.pinionTeeth=float(self.obj_DesignGui.pinionTeeth.text());
+        self.pinionTeeth=float(self.designGui.pinionTeeth.text());
         pinionTeeth=self.pinionTeeth;
         self.pinionVirtualTeeth=pinionTeeth/math.pow(math.cos(math.radians(self.helixAngle)),3);
-        self.power=float(self.obj_DesignGui.power.text());
-        self.safetyFactorMin=float(self.obj_DesignGui.safetyFactor.text());
-        self.serviceFactor=float(self.obj_DesignGui.serviceFactor.text());
-        gearing=self.obj_DesignGui.gearing.currentText();
+        self.power=float(self.designGui.power.text());
+        self.safetyFactorMin=float(self.designGui.safetyFactor.text());
+        self.serviceFactor=float(self.designGui.serviceFactor.text());
+        gearing=self.designGui.gearing.currentText();
         self.gearing, self.gearingType=DesignData.evalGearing(gearing,self.gearVirtualTeeth,self.pinionVirtualTeeth);
-        self.grade=self.obj_DesignGui.grade.currentText();
-        profile=self.obj_DesignGui.profile.currentText();
+        self.grade=self.designGui.grade.currentText();
+        profile=self.designGui.profile.currentText();
         profile=DesignData.evalProfile(profile);
         self.deformationFactor=eval(profile["deformationFactor"]);
         self.gearLewisFactor=eval(profile["lewisFactor"]["gear"]);
@@ -142,6 +142,6 @@ class Design():
                 design_f.write("Required case hardness of the gear pair is "+\
                                 str(self.caseHardness)+" BHN\n\n");
                 design_f.write("\n\n\nFor technical summary refer "+URL);
-        self.setupResultUi();
+        self.setupOutputUi();
     def save(self):
         Utility.saveFile(OCTOCAD_HELICAL_DESIGN_DATA_PATH);

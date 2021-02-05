@@ -13,12 +13,12 @@ from bin.gear.DesignData import DesignData;
 from bin.gear.InvoluteProfile import InvoluteProfile;
 class Model():
     def setupUi(self):
-        self.obj_QDialog__ui=QtWidgets.QDialog();
-        Utility.alignToCenter(self.obj_QDialog__ui);
-        self.obj_ModelGui=ModelGui();
-        self.obj_ModelGui.setupUi(self.obj_QDialog__ui);
-        self.obj_QDialog__ui.show();
-        self.obj_ModelGui.buttonBox.accepted.connect(self.getData);
+        self.dialog=QtWidgets.QDialog();
+        Utility.alignToCenter(self.dialog);
+        self.modelGui=ModelGui();
+        self.modelGui.setupUi(self.dialog);
+        self.dialog.show();
+        self.modelGui.buttonBox.accepted.connect(self.getData);
     def generateModel(self):
         doc=FreeCAD.newDocument(self.fileName);
         pitch=math.pi*self.module*self.teeth/math.tan(self.helixAngle);
@@ -40,16 +40,16 @@ class Model():
         doc.recompute();
     def getData(self):
         self.gear="Helical";
-        self.profileType=self.obj_ModelGui.profile.currentText();
+        self.profileType=self.modelGui.profile.currentText();
         profile=DesignData.evalProfile(self.profileType);
         self.pressureAngle=float(profile["pressureAngle"]);
-        self.helixAngle=float(self.obj_ModelGui.helixAngle.text());
-        self.module=float(self.obj_ModelGui.module.text());
-        self.teeth=float(self.obj_ModelGui.teeth.text());
-        self.gearing=self.obj_ModelGui.gearing.currentText();
-        self.faceWidth=float(self.obj_ModelGui.faceWidth.text());
-        self.clearance=float(self.obj_ModelGui.clearance.text());
-        self.fillet=float(self.obj_ModelGui.fillet.text());
+        self.helixAngle=float(self.modelGui.helixAngle.text());
+        self.module=float(self.modelGui.module.text());
+        self.teeth=float(self.modelGui.teeth.text());
+        self.gearing=self.modelGui.gearing.currentText();
+        self.faceWidth=float(self.modelGui.faceWidth.text());
+        self.clearance=float(self.modelGui.clearance.text());
+        self.fillet=float(self.modelGui.fillet.text());
         self.fileName=self.gear+" "+str(self.helixAngle)+" "+\
                         self.profileType+" "+str(self.module)+"x"+str(self.teeth)+\
                         " "+self.gearing+" "+str(self.faceWidth)+" "+\
@@ -57,6 +57,6 @@ class Model():
         self.helixAngle=math.radians(self.helixAngle);
         self.generateModel();
 if __name__=="__main__":
-    obj_QApplication=QtWidgets.QApplication(sys.argv);
-    obj_Model=Model();
-    obj_Model.setupUi();
+    qApplication=QtWidgets.QApplication(sys.argv);
+    model=Model();
+    model.setupUi();

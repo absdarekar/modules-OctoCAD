@@ -10,63 +10,56 @@ from gui.octocad.ModuleGui import ModuleGui;
 from bin.Utility import Utility;
 class Octocad():
     def setupUi(self):
-        self.obj_QMainWindow__ui=QtWidgets.QMainWindow();
-        Utility.alignToCenter(self.obj_QMainWindow__ui);
-        self.obj_HomeGui=HomeGui();
-        self.obj_HomeGui.setupUi(self.obj_QMainWindow__ui,OCTOCAD_FILES_PATH);
-        self.obj_ModuleGui=ModuleGui();
-        self.obj_QMainWindow__ui.show();
-        self.obj_HomeGui.design.clicked.connect(self.setupDesignUi);
-        self.obj_HomeGui.model.clicked.connect(self.setupModelUi);
+        self.homeWindow=QtWidgets.QMainWindow();
+        Utility.alignToCenter(self.homeWindow);
+        self.homeGui=HomeGui();
+        self.homeGui.setupUi(self.homeWindow,OCTOCAD_FILES_PATH);
+        self.homeWindow.show();
+        self.homeGui.design.clicked.connect(self.setupDesignUi);
+        self.homeGui.model.clicked.connect(self.setupModelUi);
     def setupDesignUi(self):
-        self.obj_QMainWindow__setupDesignUi=QtWidgets.QMainWindow();
-        Utility.alignToCenter(self.obj_QMainWindow__setupDesignUi);
-        self.obj_ModuleGui=ModuleGui();
-        self.obj_ModuleGui.setupUi(self.obj_QMainWindow__setupDesignUi);
-        self.obj_QMainWindow__setupDesignUi.setWindowTitle("Design");
-        self.obj_QMainWindow__setupDesignUi.show();
-        self.obj_ModuleGui.spurGear.clicked.connect(self.designSpur);
-        self.obj_ModuleGui.helicalGear.clicked.connect(self.designHelical);
+        self.designWindow=QtWidgets.QMainWindow();
+        Utility.alignToCenter(self.designWindow);
+        self.moduleGui=ModuleGui();
+        self.moduleGui.setupUi(self.designWindow);
+        self.designWindow.setWindowTitle("Design");
+        self.designWindow.show();
+        self.moduleGui.spurGear.clicked.connect(self.designSpur);
+        self.moduleGui.helicalGear.clicked.connect(self.designHelical);
     def setupModelUi(self):
-        self.obj_QMainWindow__setupModelUi=QtWidgets.QMainWindow();
-        Utility.alignToCenter(self.obj_QMainWindow__setupModelUi);
-        self.obj_ModuleGui=ModuleGui();
-        self.obj_ModuleGui.setupUi(self.obj_QMainWindow__setupModelUi);
-        self.obj_QMainWindow__setupModelUi.setWindowTitle("Model");
-        self.obj_QMainWindow__setupModelUi.show();
-        self.obj_ModuleGui.spurGear.clicked.connect(self.modelSpur);
-        self.obj_ModuleGui.helicalGear.clicked.connect(self.modelHelical);
-        self.obj_ModuleGui.wormGear.clicked.connect(self.modelWorm);
+        self.modelWindow=QtWidgets.QMainWindow();
+        Utility.alignToCenter(self.modelWindow);
+        self.moduleGui=ModuleGui();
+        self.moduleGui.setupUi(self.modelWindow);
+        self.modelWindow.setWindowTitle("Model");
+        self.modelWindow.show();
+        self.moduleGui.spurGear.clicked.connect(self.modelSpur);
+        self.moduleGui.helicalGear.clicked.connect(self.modelHelical);
+        self.moduleGui.wormGear.clicked.connect(self.modelWorm);
     def designSpur(self):
         from bin.gear.spur.Design import Design;
         os.makedirs(OCTOCAD_APPDATA_PATH+"/gear/spur",exist_ok=True);
-        self.obj_Design__designSpur=Design();
-        self.obj_Design__designSpur.setupUi();
+        self.design=Design();
+        self.design.setupUi();
     def designHelical(self):
         from bin.gear.helical.Design import Design;
         os.makedirs(OCTOCAD_APPDATA_PATH+"/gear/helical",exist_ok=True);
-        self.obj_Design__designSpur=Design();
-        self.obj_Design__designSpur.setupUi();
+        self.design=Design();
+        self.design.setupUi();
     def modelSpur(self):
         FILE_PATH=OCTOCAD_FILES_PATH+"/bin/gear/spur/Model.py";
         THREAD_NAME="modelSpur";
-        modelUi=self.obj_QMainWindow__setupModelUi;
-        octocadUi=self.obj_QMainWindow__ui;
-        Utility.createThread(FILE_PATH,THREAD_NAME,modelUi,octocadUi);
+        Utility.createThread(FILE_PATH,THREAD_NAME,self.modelWindow,self.homeWindow);
     def modelHelical(self):
         FILE_PATH=OCTOCAD_FILES_PATH+"/bin/gear/helical/Model.py";
         THREAD_NAME="modelHelical";
-        modelUi=self.obj_QMainWindow__setupModelUi;
-        octocadUi=self.obj_QMainWindow__ui;
-        Utility.createThread(FILE_PATH,THREAD_NAME,modelUi,octocadUi);
+        Utility.createThread(FILE_PATH,THREAD_NAME,self.modelWindow,self.homeWindow);
     def modelWorm(self):
         FILE_PATH=OCTOCAD_FILES_PATH+"/bin/gear/worm/Model.py";
         THREAD_NAME="modelWorm";
-        modelUi=self.obj_QMainWindow__setupModelUi;
-        octocadUi=self.obj_QMainWindow__ui;
-        Utility.createThread(FILE_PATH,THREAD_NAME,modelUi,octocadUi);
+        Utility.createThread(FILE_PATH,THREAD_NAME,self.modelWindow,self.homeWindow);
 if __name__=="__main__":
-    obj_QApplication=QtWidgets.QApplication(sys.argv);
-    obj_Octocad=Octocad();
-    obj_Octocad.setupUi();
-    sys.exit(obj_QApplication.exec_());
+    qApplication=QtWidgets.QApplication(sys.argv);
+    octocad=Octocad();
+    octocad.setupUi();
+    sys.exit(qApplication.exec_());
