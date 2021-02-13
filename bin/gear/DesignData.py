@@ -2,6 +2,57 @@ import math;
 class DesignData():
     MODULES=[1,1.125,1.25,1.375,1.5,1.75,2,2.25,2.5,2.75,3,3.5,4,4.5,5,
             5.5,6,6.5,7,8,9,10,11,12,14,16,18,20,22,25,28,32,36,40,45,50];
+    def getTolerance(module,grade):
+        if(module<5):
+            if(grade=="Class I"):
+                error=0.05;
+            if(grade=="Class II"):
+                error=0.025;
+            if(grade=="Class III"):
+                error=0.0125;
+        if(module>=5 and module<6):
+            if(grade=="Class I"):
+                error=0.056;
+            if(grade=="Class II"):
+                error=0.025;
+            if(grade=="Class III"):
+                error=0.0125;
+        if(module>=6 and module<7):
+            if(grade=="Class I"):
+                error=0.064;
+            if(grade=="Class II"):
+                error=0.03;
+            if(grade=="Class III"):
+                error=0.015;
+        if(module==7):
+            if(grade=="Class I"):
+                error=0.072;
+            if(grade=="Class II"):
+                error=0.035;
+            if(grade=="Class III"):
+                error=0.017;
+        if(module==8):
+            if(grade=="Class I"):
+                error=0.08;
+            if(grade=="Class II"):
+                error=0.038;
+            if(grade=="Class III"):
+                error=0.019;
+        if(module==9):
+            if(grade=="Class I"):
+                error=0.085;
+            if(grade=="Class II"):
+                error=0.041;
+            if(grade=="Class III"):
+                error=0.0205;
+        if(module>=10):
+            if(grade=="Class I"):
+                error=0.09;
+            if(grade=="Class II"):
+                error=0.044;
+            if(grade=="Class III"):
+                error=0.022;
+        return error;
     def getGrade(grade):
         if grade=="1":
             constant1=0.8;

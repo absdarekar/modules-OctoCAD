@@ -26,6 +26,7 @@ class Octocad():
         self.designWindow.show();
         self.moduleGui.spurGear.clicked.connect(self.designSpur);
         self.moduleGui.helicalGear.clicked.connect(self.designHelical);
+        self.moduleGui.bevelGear.clicked.connect(self.designBevel);
     def setupModelUi(self):
         self.modelWindow=QtWidgets.QMainWindow();
         Utility.alignToCenter(self.modelWindow);
@@ -44,6 +45,11 @@ class Octocad():
     def designHelical(self):
         from bin.gear.helical.Design import Design;
         os.makedirs(OCTOCAD_APPDATA_PATH+"/gear/helical",exist_ok=True);
+        self.design=Design();
+        self.design.setupUi();
+    def designBevel(self):
+        from bin.gear.bevel.Design import Design;
+        os.makedirs(OCTOCAD_APPDATA_PATH+"/gear/bevel",exist_ok=True);
         self.design=Design();
         self.design.setupUi();
     def modelSpur(self):
