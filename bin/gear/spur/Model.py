@@ -37,9 +37,9 @@ class Model():
         self.faceWidth=float(self.modelGui.faceWidth.text());
         self.clearance=float(self.modelGui.clearance.text());
         self.fillet=float(self.modelGui.fillet.text());
-        self.fileName=self.gear+" "+self.profileType+" "+str(self.module)+"x"+\
-                        str(self.teeth)+" "+self.gearing+" "+str(self.faceWidth)+\
-                        " "+str(self.clearance)+" "+str(self.fillet);
+        self.fileName=self.gear+" "+str(self.teeth)+" "+\
+                        str(self.module*self.teeth)+" mm "+\
+                        str(self.module)+" mm";
         self.generateModel();
 if __name__=="__main__":
     qApplication=QtWidgets.QApplication(sys.argv);

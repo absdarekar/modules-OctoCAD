@@ -64,124 +64,6 @@
        </item>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="moduleLabel">
-       <property name="text">
-        <string>Enter module</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QDoubleSpinBox" name="module">
-       <property name="minimum">
-        <double>1.000000000000000</double>
-       </property>
-       <property name="maximum">
-        <double>50.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.250000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="teethLabel">
-       <property name="text">
-        <string>Enter number of teeth</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QSpinBox" name="teeth">
-       <property name="minimum">
-        <number>14</number>
-       </property>
-       <property name="maximum">
-        <number>300</number>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="gearingLabel">
-       <property name="text">
-        <string>Select type of gearing</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QComboBox" name="gearing">
-       <item>
-        <property name="text">
-         <string>Internal gearing</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>External gearing</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="faceWidthLabel">
-       <property name="text">
-        <string>Enter face width in terms of module</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QDoubleSpinBox" name="faceWidth">
-       <property name="minimum">
-        <double>10.000000000000000</double>
-       </property>
-       <property name="maximum">
-        <double>100.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.500000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="clearanceLabel">
-       <property name="text">
-        <string>Enter clearance in terms of module</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QDoubleSpinBox" name="clearance">
-       <property name="minimum">
-        <double>0.450000000000000</double>
-       </property>
-       <property name="maximum">
-        <double>2.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.010000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="filletLabel">
-       <property name="text">
-        <string>Enter fillet radius in terms of module</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QDoubleSpinBox" name="fillet">
-       <property name="minimum">
-        <double>0.250000000000000</double>
-       </property>
-       <property name="maximum">
-        <double>5.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.050000000000000</double>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="helixAngleLabel">
        <property name="text">
@@ -199,6 +81,145 @@
        </property>
        <property name="singleStep">
         <double>0.250000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="helixHandLabel">
+       <property name="text">
+        <string>Select hand of helix</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="helixHand">
+       <item>
+        <property name="text">
+         <string>Right hand</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Left hand</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="moduleLabel">
+       <property name="text">
+        <string>Enter module</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QDoubleSpinBox" name="module">
+       <property name="minimum">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>50.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.250000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="teethLabel">
+       <property name="text">
+        <string>Enter number of teeth</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QSpinBox" name="teeth">
+       <property name="minimum">
+        <number>14</number>
+       </property>
+       <property name="maximum">
+        <number>300</number>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="gearingLabel">
+       <property name="text">
+        <string>Select type of gearing</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QComboBox" name="gearing">
+       <item>
+        <property name="text">
+         <string>Internal gearing</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>External gearing</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="faceWidthLabel">
+       <property name="text">
+        <string>Enter face width in terms of module</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QDoubleSpinBox" name="faceWidth">
+       <property name="minimum">
+        <double>10.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>100.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.500000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="clearanceLabel">
+       <property name="text">
+        <string>Enter clearance in terms of module</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QDoubleSpinBox" name="clearance">
+       <property name="minimum">
+        <double>0.450000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>2.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.010000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="filletLabel">
+       <property name="text">
+        <string>Enter fillet radius in terms of module</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QDoubleSpinBox" name="fillet">
+       <property name="minimum">
+        <double>0.250000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>5.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.050000000000000</double>
        </property>
       </widget>
      </item>

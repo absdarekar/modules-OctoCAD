@@ -23,7 +23,7 @@ class Model():
         doc=FreeCAD.newDocument(self.fileName);
         pitch=math.pi*self.module*self.teeth/math.tan(self.helixAngle);
         pitchRadius=self.module*self.teeth/2;
-        helix=Part.makeHelix(pitch,self.faceWidth*self.module,pitchRadius);
+        helix=Part.makeHelix(pitch,self.faceWidth*self.module,pitchRadius,0,self.leftHand,False);
         doc.addObject("Part::Feature","helix");
         doc.helix.Shape=helix;
         doc.addObject("Part::Sweep","helicalGear");
@@ -44,16 +44,20 @@ class Model():
         profile=DesignData.evalProfile(self.profileType);
         self.pressureAngle=float(profile["pressureAngle"]);
         self.helixAngle=float(self.modelGui.helixAngle.text());
+        self.helixHand=self.modelGui.helixHand.currentText();
+        if(self.helixHand=="Left hand"):
+            self.leftHand=True;
+        else:
+            self.leftHand=False;
         self.module=float(self.modelGui.module.text());
         self.teeth=float(self.modelGui.teeth.text());
         self.gearing=self.modelGui.gearing.currentText();
         self.faceWidth=float(self.modelGui.faceWidth.text());
         self.clearance=float(self.modelGui.clearance.text());
         self.fillet=float(self.modelGui.fillet.text());
-        self.fileName=self.gear+" "+str(self.helixAngle)+" "+\
-                        self.profileType+" "+str(self.module)+"x"+str(self.teeth)+\
-                        " "+self.gearing+" "+str(self.faceWidth)+" "+\
-                        str(self.clearance)+" "+str(self.fillet);
+        self.fileName=self.gear+" "+self.helixHand+" "+\
+                        str(self.teeth)+" "+str(self.module*self.teeth)+" mm "\
+                        +str(self.module)+" mm";
         self.helixAngle=math.radians(self.helixAngle);
         self.generateModel();
 if __name__=="__main__":
