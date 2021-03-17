@@ -2,25 +2,21 @@
 
 # Shell script to install OctoCAD and FreeCAD
 
-# Enables Universe repository and updates the system
+# Download package information from all configured sources
 
-echo "Get update"
-sudo add-apt-repository universe && sudo apt-get update
+echo "Update package information"
+sudo apt-get update
 
-# installs pip3
+# install PyQt5 developer and PyQt5 developer tools
 
-echo "Installing pip3"
-sudo apt install python3-pip -y
-
-# installs PyQt5
-
-echo "Installing PyQt5"
-pip3 install PyQt5
+echo "Installing PyQt5 developer"
+sudo apt install pyqt5-dev
+echo "Installing PyQt5 developer tools"
+sudo apt install pyqt5-dev-tools
 
 # installs FreeCAD
 
 echo "Installing FreeCAD"
-sudo add-apt-repository ppa:freecad-maintainers/freecad-stable -y && sudo apt-get update
 sudo apt install freecad -y
 
 # download OctoCAD
