@@ -1,22 +1,17 @@
 import os;
-import sys;
-from PyQt5 import QtCore, QtGui, QtWidgets;
+import pickle;
 import FreeCAD;
 import Draft;
 OCTOCAD_FILES_PATH=os.path.join(os.path.expanduser('~'),'OctoCAD');
+OCTOCAD_APPDATA_PATH=os.path.join(os.path.expanduser('~'),'.OctoCAD');
 sys.path.insert(1,OCTOCAD_FILES_PATH);
-from gui.gear.spur.ModelGui import ModelGui;
-from bin.Utility import Utility;
-from bin.gear.DesignData import DesignData;
 from bin.gear.InvoluteProfile import InvoluteProfile;
 class Model():
-    def setupUi(self):
-        self.dialog=QtWidgets.QDialog();
-        Utility.alignToCenter(self.dialog);
-        self.modelGui=ModelGui();
-        self.modelGui.setupUi(self.dialog);
-        self.dialog.show();
-        self.modelGui.buttonBox.accepted.connect(self.getData);
+    def __init__(self,):
+        with open(OCTOCAD_APPDATA_PATH+"/gear/spur/model","rb") as model_f:
+            self.gear,self.profileType,self.pressureAngle,self.module,self.teeth,\
+            self.gearing,self.faceWidth,self.clearance,self.fillet,self.fileName=\
+            pickle.load(model_f);
     def generateModel(self):
         doc=FreeCAD.newDocument(self.fileName);
         profile, height=InvoluteProfile.generateProfile(self.pressureAngle,\
@@ -26,22 +21,6 @@ class Model():
         profileExtrude=Draft.extrude(profile,height);
         FreeCADGui.ActiveDocument.getObject(profile.Name).Visibility=False;
         doc.recompute();
-    def getData(self):
-        self.gear="Spur";
-        self.profileType=self.modelGui.profile.currentText();
-        profile=DesignData.evalProfile(self.profileType);
-        self.pressureAngle=float(profile["pressureAngle"]);
-        self.module=float(self.modelGui.module.text());
-        self.teeth=float(self.modelGui.teeth.text());
-        self.gearing=self.modelGui.gearing.currentText();
-        self.faceWidth=float(self.modelGui.faceWidth.text());
-        self.clearance=float(self.modelGui.clearance.text());
-        self.fillet=float(self.modelGui.fillet.text());
-        self.fileName=self.gear+" "+str(self.teeth)+" "+\
-                        str(self.module*self.teeth)+" mm "+\
-                        str(self.module)+" mm";
-        self.generateModel();
 if __name__=="__main__":
-    qApplication=QtWidgets.QApplication(sys.argv);
     model=Model();
-    model.setupUi();
+    model.generateModel();
