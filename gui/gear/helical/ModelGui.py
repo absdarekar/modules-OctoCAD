@@ -38,7 +38,7 @@ class ModelGui(object):
         self.helixAngleLabel.setObjectName("helixAngleLabel")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.helixAngleLabel)
         self.helixAngle = QtWidgets.QDoubleSpinBox(Dialog)
-        self.helixAngle.setMinimum(25.0)
+        self.helixAngle.setMinimum(20.0)
         self.helixAngle.setMaximum(30.0)
         self.helixAngle.setSingleStep(0.25)
         self.helixAngle.setObjectName("helixAngle")

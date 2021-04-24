@@ -19,33 +19,16 @@ class Helical():
         self.octocadHelicalModelDataPath=self.octocadHelicalDesignDataPath+"model";
         self.octocadHelicalDesignDataPath+="design";
     def setupDesignUi(self):
-        self.dialog=QtWidgets.QDialog();
-        Utility.alignToCenter(self.dialog);
+        self.utilityDesign=Utility();
         self.designGui=DesignGui();
-        self.designGui.setupUi(self.dialog);
-        self.dialog.show();
-        self.moduleWindow.close();
-        self.designGui.buttonBox.accepted.connect(self.findModule);
+        self.utilityDesign.setupDialog(self.designGui,self.moduleWindow,self.findModule);
     def setupModelUi(self):
-        self.dialog=QtWidgets.QDialog();
-        Utility.alignToCenter(self.dialog);
+        self.utilityModel=Utility()
         self.modelGui=ModelGui();
-        self.modelGui.setupUi(self.dialog);
-        self.dialog.show();
-        self.moduleWindow.close();
-        self.modelGui.buttonBox.accepted.connect(self.getModelData);
+        self.utilityModel.setupDialog(self.modelGui,self.moduleWindow,self.getModelData);
     def setupOutputUi(self):
-        self.outputWindow=QtWidgets.QMainWindow();
-        Utility.alignToCenter(self.outputWindow);
-        self.outputGui=OutputGui();
-        self.outputGui.setupUi(self.outputWindow);
-        self.outputWindow.setWindowTitle("Design of helical gear");
-        self.outputGui.plainTextEdit.setPlainText(open(self.octocadHelicalDesignDataPath).read());
-        self.outputWindow.show();
-        close=self.outputGui.buttonBox.button(QtWidgets.QDialogButtonBox.Close);
-        close.clicked.connect(self.outputWindow.close);
-        save=self.outputGui.buttonBox.button(QtWidgets.QDialogButtonBox.Save);
-        save.clicked.connect(self.save);
+        title="Design of helical gear";
+        self.utilityDesign.setupOutputUi(title,self.octocadHelicalDesignDataPath);
     def getDesignData(self):
         self.helixAngle=float(self.designGui.helixAngle.text());
         self.gearElasticity=float(self.designGui.gearElasticity.text());
@@ -190,5 +173,3 @@ class Helical():
                                 str(self.caseHardness)+" BHN\n\n");
                 design_f.write("\n\n\nFor technical summary refer "+URL);
         self.setupOutputUi();
-    def save(self):
-        Utility.saveFile(self.octocadHelicalDesignDataPath);

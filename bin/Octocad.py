@@ -44,7 +44,8 @@ class Octocad():
         self.moduleGui.spurGear.clicked.connect(self.spurModel.setupModelUi);
         self.helicalModel=Helical(OCTOCAD_FILES_PATH,OCTOCAD_APPDATA_PATH,self.homeWindow,self.modelWindow);
         self.moduleGui.helicalGear.clicked.connect(self.helicalModel.setupModelUi);
-        # self.moduleGui.wormGear.clicked.connect(self.modelWorm);
+        # self.wormModel=Worm(OCTOCAD_FILES_PATH,OCTOCAD_APPDATA_PATH,self.homeWindow,self.modelWindow);
+        # self.moduleGui.wormGear.clicked.connect(self.wormModel.setupModelUi);
 if __name__=="__main__":
     qApplication=QtWidgets.QApplication(sys.argv);
     octocad=Octocad();
