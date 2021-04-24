@@ -9,6 +9,7 @@ from gui.octocad.HomeGui import HomeGui;
 from gui.octocad.ModuleGui import ModuleGui;
 from bin.Utility import Utility;
 from bin.gear.spur.Spur import Spur;
+from bin.gear.helical.Helical import Helical;
 class Octocad():
     def __init__(self):
         self.homeWindow=QtWidgets.QMainWindow();
@@ -27,7 +28,8 @@ class Octocad():
         self.designWindow.show();
         self.spur=Spur(OCTOCAD_FILES_PATH,OCTOCAD_APPDATA_PATH,self.homeWindow,self.designWindow);
         self.moduleGui.spurGear.clicked.connect(self.spur.setupDesignUi);
-        # self.moduleGui.helicalGear.clicked.connect(self.designHelical);
+        self.helical=Helical(OCTOCAD_FILES_PATH,OCTOCAD_APPDATA_PATH,self.homeWindow,self.designWindow);
+        self.moduleGui.helicalGear.clicked.connect(self.helical.setupDesignUi);
         # self.moduleGui.bevelGear.clicked.connect(self.designBevel);
     def setupModelUi(self):
         self.modelWindow=QtWidgets.QMainWindow();
@@ -38,7 +40,8 @@ class Octocad():
         self.modelWindow.show();
         self.spur=Spur(OCTOCAD_FILES_PATH,OCTOCAD_APPDATA_PATH,self.homeWindow,self.modelWindow);
         self.moduleGui.spurGear.clicked.connect(self.spur.setupModelUi);
-        # self.moduleGui.helicalGear.clicked.connect(self.modelHelical);
+        self.helical=Helical(OCTOCAD_FILES_PATH,OCTOCAD_APPDATA_PATH,self.homeWindow,self.modelWindow);
+        self.moduleGui.helicalGear.clicked.connect(self.helical.setupModelUi);
         # self.moduleGui.wormGear.clicked.connect(self.modelWorm);
 if __name__=="__main__":
     qApplication=QtWidgets.QApplication(sys.argv);

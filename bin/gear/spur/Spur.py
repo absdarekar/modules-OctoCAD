@@ -14,10 +14,10 @@ class Spur():
         self.octocadAppdataPath=octocadAppdataPath;
         self.homeWindow=homeWindow;
         self.moduleWindow=moduleWindow;
-        self.octocadSpurDataPath=self.octocadAppdataPath+"/gear/spur/";
-        os.makedirs(self.octocadSpurDataPath,exist_ok=True);
-        self.octocadSpurModelDataPath=self.octocadSpurDataPath+"model";
-        self.octocadSpurDataPath+="design";
+        self.octocadSpurDesignDataPath=self.octocadAppdataPath+"/gear/spur/";
+        os.makedirs(self.octocadSpurDesignDataPath,exist_ok=True);
+        self.octocadSpurModelDataPath=self.octocadSpurDesignDataPath+"model";
+        self.octocadSpurDesignDataPath+="design";
     def setupDesignUi(self):
         self.dialog=QtWidgets.QDialog();
         Utility.alignToCenter(self.dialog);
@@ -40,7 +40,7 @@ class Spur():
         self.outputGui=OutputGui();
         self.outputGui.setupUi(self.outputWindow);
         self.outputWindow.setWindowTitle("Design of spur gear");
-        self.outputGui.plainTextEdit.setPlainText(open(self.octocadSpurDataPath).read());
+        self.outputGui.plainTextEdit.setPlainText(open(self.octocadSpurDesignDataPath).read());
         self.outputWindow.show();
         close=self.outputGui.buttonBox.button(QtWidgets.QDialogButtonBox.Close);
         close.clicked.connect(self.outputWindow.close);
@@ -133,7 +133,7 @@ class Spur():
     def createResult(self):
         URL="https://github.com/absdarekar/OctoCAD/blob/"+\
             "master/doc/gear/spur/Technical-Summary.pdf";
-        with open(self.octocadSpurDataPath,"w") as design_f:
+        with open(self.octocadSpurDesignDataPath,"w") as design_f:
             with open(self.octocadFilesPath+"/LICENSE.md","r") as license_f:
                 design_f.write("\n\n\nDESIGN OF SPUR GEAR GENERATED USING OctoCAD©");
                 design_f.write("\n\n\nEND USER AGREEMENT\n\n\n");
@@ -178,4 +178,4 @@ class Spur():
                 design_f.write("\n\n\nFor technical summary refer "+URL);
         self.setupOutputUi();
     def save(self):
-        Utility.saveFile(self.octocadSpurDataPath);
+        Utility.saveFile(self.octocadSpurDesignDataPath);

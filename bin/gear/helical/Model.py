@@ -1,24 +1,25 @@
 import os;
-import sys;
+import pickle;
 import math;
-from PyQt5 import QtCore, QtGui, QtWidgets;
 import FreeCAD;
-import FreeCADGui;
+import Draft;
 import Part;
 OCTOCAD_FILES_PATH=os.path.join(os.path.expanduser('~'),'OctoCAD');
+OCTOCAD_APPDATA_PATH=os.path.join(os.path.expanduser('~'),'.OctoCAD');
 sys.path.insert(1,OCTOCAD_FILES_PATH);
-from gui.gear.helical.ModelGui import ModelGui;
-from bin.Utility import Utility;
-from bin.gear.DesignData import DesignData;
 from bin.gear.InvoluteProfile import InvoluteProfile;
 class Model():
-    def setupUi(self):
-        self.dialog=QtWidgets.QDialog();
-        Utility.alignToCenter(self.dialog);
-        self.modelGui=ModelGui();
-        self.modelGui.setupUi(self.dialog);
-        self.dialog.show();
-        self.modelGui.buttonBox.accepted.connect(self.getData);
+    def __init__(self,):
+        with open(OCTOCAD_APPDATA_PATH+"/gear/helical/model","rb") as model_f:
+            self.gear,self.profileType,self.pressureAngle,self.helixAngle,\
+            self.helixHand,self.module,self.teeth,self.gearing,self.faceWidth,\
+            self.clearance,self.fillet,self.fileName=\
+            pickle.load(model_f);
+        if(self.helixHand=="Left hand"):
+            self.leftHand=True;
+        else:
+            self.leftHand=False;
+        self.helixAngle=math.radians(self.helixAngle);
     def generateModel(self):
         doc=FreeCAD.newDocument(self.fileName);
         pitch=math.pi*self.module*self.teeth/math.tan(self.helixAngle);
@@ -38,29 +39,6 @@ class Model():
         FreeCADGui.ActiveDocument.getObject(profile.Name).Visibility=False;
         FreeCADGui.ActiveDocument.getObject("helix").Visibility=False;
         doc.recompute();
-    def getData(self):
-        self.gear="Helical";
-        self.profileType=self.modelGui.profile.currentText();
-        profile=DesignData.evalProfile(self.profileType);
-        self.pressureAngle=float(profile["pressureAngle"]);
-        self.helixAngle=float(self.modelGui.helixAngle.text());
-        self.helixHand=self.modelGui.helixHand.currentText();
-        if(self.helixHand=="Left hand"):
-            self.leftHand=True;
-        else:
-            self.leftHand=False;
-        self.module=float(self.modelGui.module.text());
-        self.teeth=float(self.modelGui.teeth.text());
-        self.gearing=self.modelGui.gearing.currentText();
-        self.faceWidth=float(self.modelGui.faceWidth.text());
-        self.clearance=float(self.modelGui.clearance.text());
-        self.fillet=float(self.modelGui.fillet.text());
-        self.fileName=self.gear+" "+self.helixHand+" "+\
-                        str(self.teeth)+" "+str(self.module*self.teeth)+" mm "\
-                        +str(self.module)+" mm";
-        self.helixAngle=math.radians(self.helixAngle);
-        self.generateModel();
 if __name__=="__main__":
-    qApplication=QtWidgets.QApplication(sys.argv);
     model=Model();
-    model.setupUi();
+    model.generateModel();
