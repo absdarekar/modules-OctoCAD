@@ -2,6 +2,7 @@ import os;
 import pickle;
 import math;
 import FreeCAD;
+import FreeCADGui;
 import Draft;
 import Part;
 OCTOCAD_FILES_PATH=os.path.join(os.path.expanduser('~'),'OctoCAD');

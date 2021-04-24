@@ -1,18 +1,29 @@
+import os;
 import math;
+import pickle;
+import threading;
 from PyQt5 import QtCore, QtGui, QtWidgets;
 from gui.gear.bevel.DesignGui import DesignGui;
 from gui.octocad.OutputGui import OutputGui;
 from bin.Utility import Utility;
-from bin.Octocad import OCTOCAD_APPDATA_PATH, OCTOCAD_FILES_PATH;
 from bin.gear.DesignData import DesignData;
-OCTOCAD_BEVEL_DESIGN_DATA_PATH=OCTOCAD_APPDATA_PATH+"/gear/bevel/design";
-class Design():
-    def setupUi(self):
+class Bevel():
+    def __init__(self,octocadFilesPath,octocadAppdataPath,homeWindow,moduleWindow):
+        self.octocadFilesPath=octocadFilesPath;
+        self.octocadAppdataPath=octocadAppdataPath;
+        self.homeWindow=homeWindow;
+        self.moduleWindow=moduleWindow;
+        self.octocadBevelDesignDataPath=self.octocadAppdataPath+"/gear/bevel/";
+        os.makedirs(self.octocadBevelDesignDataPath,exist_ok=True);
+        self.octocadBevelModelDataPath=self.octocadBevelDesignDataPath+"model";
+        self.octocadBevelDesignDataPath+="design";
+    def setupDesignUi(self):
         self.dialog=QtWidgets.QDialog();
         Utility.alignToCenter(self.dialog);
         self.designGui=DesignGui();
         self.designGui.setupUi(self.dialog);
         self.dialog.show();
+        self.moduleWindow.close();
         self.designGui.buttonBox.accepted.connect(self.findModule);
     def setupOutputUi(self):
         self.outputWindow=QtWidgets.QMainWindow();
@@ -20,13 +31,13 @@ class Design():
         self.outputGui=OutputGui();
         self.outputGui.setupUi(self.outputWindow);
         self.outputWindow.setWindowTitle("Design of bevel gear");
-        self.outputGui.plainTextEdit.setPlainText(open(OCTOCAD_BEVEL_DESIGN_DATA_PATH).read());
+        self.outputGui.plainTextEdit.setPlainText(open(self.octocadBevelDesignDataPath).read());
         self.outputWindow.show();
         close=self.outputGui.buttonBox.button(QtWidgets.QDialogButtonBox.Close);
         close.clicked.connect(self.outputWindow.close);
         save=self.outputGui.buttonBox.button(QtWidgets.QDialogButtonBox.Save);
         save.clicked.connect(self.save);
-    def getData(self):
+    def getDesignData(self):
         self.gearElasticity=float(self.designGui.gearElasticity.text());
         self.gearStrength=float(self.designGui.gearStrength.text());
         self.gearBendingStress=1/3*self.gearStrength;
@@ -76,7 +87,7 @@ class Design():
         safetyFactor=bendingLoad/effectiveLoad;
         return pinionBendingLoad, gearBendingLoad, safetyFactor, effectiveLoad;
     def findModule(self):
-        self.getData();
+        self.getDesignData();
         self.safetyFactor=0.0;
         i=0;
         while(self.safetyFactorMin>=self.safetyFactor):
@@ -96,10 +107,12 @@ class Design():
     def createResult(self):
         URL="https://github.com/absdarekar/OctoCAD/blob/"+\
             "master/doc/gear/bevel/Technical-Summary.pdf";
-        with open(OCTOCAD_BEVEL_DESIGN_DATA_PATH,"w+") as design_f:
-            with open(OCTOCAD_FILES_PATH+"/LICENSE.md","r") as license_f:
+        with open(self.octocadBevelDesignDataPath,"w") as design_f:
+            with open(self.octocadFilesPath+"/LICENSE.md","r") as license_f:
+                design_f.write("\n\n\nDESIGN OF BEVEL GEAR GENERATED USING OctoCAD©");
+                design_f.write("\n\n\nEND USER AGREEMENT\n\n\n");
                 design_f.write(license_f.read());
-                design_f.write("\n\n\nDesign of bevel gear for given design data:\n\n\n");
+                design_f.write("\n\n\nRESULTS\n\n\n");
                 design_f.write("Ultimate tensile strength of pinion is "+\
                                 str(self.pinionStrength)+" N.mm^-2\n\n");
                 design_f.write("Ultimate tensile strength of gear is "+\
@@ -144,4 +157,4 @@ class Design():
                 design_f.write("\n\n\nFor technical summary refer "+URL);
         self.setupOutputUi();
     def save(self):
-        Utility.saveFile(OCTOCAD_BEVEL_DESIGN_DATA_PATH);
+        Utility.saveFile(self.octocadBevelDesignDataPath);
