@@ -1,10 +1,10 @@
 import os;
 import sys;
 from PyQt5 import QtCore, QtGui, QtWidgets;
-OCTOCAD_FILES_PATH=os.path.join(os.path.expanduser('~'),'OctoCAD');
-OCTOCAD_APPDATA_PATH=os.path.join(os.path.expanduser('~'),'.OctoCAD');
-os.makedirs(OCTOCAD_APPDATA_PATH,exist_ok=True);
-sys.path.insert(1,OCTOCAD_FILES_PATH);
+FILES_PATH=os.path.join(os.path.expanduser('~'),'OctoCAD');
+APPDATA_PATH=os.path.join(os.path.expanduser('~'),'.OctoCAD');
+os.makedirs(APPDATA_PATH,exist_ok=True);
+sys.path.insert(1,FILES_PATH);
 from gui.octocad.HomeGui import HomeGui;
 from gui.octocad.ModuleGui import ModuleGui;
 from bin.Utility import Utility;
@@ -16,7 +16,7 @@ class Octocad():
         self.homeWindow=QtWidgets.QMainWindow();
         Utility.alignToCenter(self.homeWindow);
         self.homeGui=HomeGui();
-        self.homeGui.setupUi(self.homeWindow,OCTOCAD_FILES_PATH);
+        self.homeGui.setupUi(self.homeWindow,FILES_PATH);
         self.homeWindow.show();
         self.homeGui.design.clicked.connect(self.setupDesignUi);
         self.homeGui.model.clicked.connect(self.setupModelUi);
@@ -27,11 +27,11 @@ class Octocad():
         self.moduleGui.setupUi(self.designWindow);
         self.designWindow.setWindowTitle("Design");
         self.designWindow.show();
-        self.spurDesign=Spur(OCTOCAD_FILES_PATH,OCTOCAD_APPDATA_PATH,self.homeWindow,self.designWindow);
+        self.spurDesign=Spur(FILES_PATH,APPDATA_PATH,self.homeWindow,self.designWindow);
         self.moduleGui.spurGear.clicked.connect(self.spurDesign.setupDesignUi);
-        self.helicalDesign=Helical(OCTOCAD_FILES_PATH,OCTOCAD_APPDATA_PATH,self.homeWindow,self.designWindow);
+        self.helicalDesign=Helical(FILES_PATH,APPDATA_PATH,self.homeWindow,self.designWindow);
         self.moduleGui.helicalGear.clicked.connect(self.helicalDesign.setupDesignUi);
-        self.bevelDesign=Bevel(OCTOCAD_FILES_PATH,OCTOCAD_APPDATA_PATH,self.homeWindow,self.designWindow);
+        self.bevelDesign=Bevel(FILES_PATH,APPDATA_PATH,self.homeWindow,self.designWindow);
         self.moduleGui.bevelGear.clicked.connect(self.bevelDesign.setupDesignUi);
     def setupModelUi(self):
         self.modelWindow=QtWidgets.QMainWindow();
@@ -40,11 +40,11 @@ class Octocad():
         self.moduleGui.setupUi(self.modelWindow);
         self.modelWindow.setWindowTitle("Model");
         self.modelWindow.show();
-        self.spurModel=Spur(OCTOCAD_FILES_PATH,OCTOCAD_APPDATA_PATH,self.homeWindow,self.modelWindow);
+        self.spurModel=Spur(FILES_PATH,APPDATA_PATH,self.homeWindow,self.modelWindow);
         self.moduleGui.spurGear.clicked.connect(self.spurModel.setupModelUi);
-        self.helicalModel=Helical(OCTOCAD_FILES_PATH,OCTOCAD_APPDATA_PATH,self.homeWindow,self.modelWindow);
+        self.helicalModel=Helical(FILES_PATH,APPDATA_PATH,self.homeWindow,self.modelWindow);
         self.moduleGui.helicalGear.clicked.connect(self.helicalModel.setupModelUi);
-        # self.wormModel=Worm(OCTOCAD_FILES_PATH,OCTOCAD_APPDATA_PATH,self.homeWindow,self.modelWindow);
+        # self.wormModel=Worm(FILES_PATH,APPDATA_PATH,self.homeWindow,self.modelWindow);
         # self.moduleGui.wormGear.clicked.connect(self.wormModel.setupModelUi);
 if __name__=="__main__":
     qApplication=QtWidgets.QApplication(sys.argv);

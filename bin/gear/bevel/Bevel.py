@@ -1,22 +1,21 @@
 import os;
 import math;
 import pickle;
-import threading;
 from PyQt5 import QtCore, QtGui, QtWidgets;
 from gui.gear.bevel.DesignGui import DesignGui;
 from gui.octocad.OutputGui import OutputGui;
 from bin.Utility import Utility;
 from bin.gear.DesignData import DesignData;
 class Bevel():
-    def __init__(self,octocadFilesPath,octocadAppdataPath,homeWindow,moduleWindow):
-        self.octocadFilesPath=octocadFilesPath;
-        self.octocadAppdataPath=octocadAppdataPath;
+    def __init__(self,filesPath,appdataPath,homeWindow,moduleWindow):
+        self.filesPath=filesPath;
+        self.appdataPath=appdataPath;
         self.homeWindow=homeWindow;
         self.moduleWindow=moduleWindow;
-        self.octocadBevelDesignDataPath=self.octocadAppdataPath+"/gear/bevel/";
-        os.makedirs(self.octocadBevelDesignDataPath,exist_ok=True);
-        self.octocadBevelModelDataPath=self.octocadBevelDesignDataPath+"model";
-        self.octocadBevelDesignDataPath+="design";
+        self.designDataPath=self.appdataPath+"/gear/bevel/";
+        os.makedirs(self.designDataPath,exist_ok=True);
+        self.modelDataPath=self.designDataPath+"model";
+        self.designDataPath+="design";
     def setupDesignUi(self):
         self.utilityDesign=Utility();
         self.designGui=DesignGui();
@@ -27,7 +26,7 @@ class Bevel():
     #     self.utilityModel.setupDialog(self.modelGui,self.moduleWindow,self.getModelData);
     def setupOutputUi(self):
         title="Design of bevel gear";
-        self.utilityDesign.setupOutputUi(title,self.octocadBevelDesignDataPath);
+        self.utilityDesign.setupOutputUi(title,self.designDataPath);
     def getDesignData(self):
         self.gearElasticity=float(self.designGui.gearElasticity.text());
         self.gearStrength=float(self.designGui.gearStrength.text());
@@ -98,8 +97,8 @@ class Bevel():
     def createResult(self):
         URL="https://github.com/absdarekar/OctoCAD/blob/"+\
             "master/doc/gear/bevel/Technical-Summary.pdf";
-        with open(self.octocadBevelDesignDataPath,"w") as design_f:
-            with open(self.octocadFilesPath+"/LICENSE.md","r") as license_f:
+        with open(self.designDataPath,"w") as design_f:
+            with open(self.filesPath+"/LICENSE.md","r") as license_f:
                 design_f.write("\n\n\nDESIGN OF BEVEL GEAR GENERATED USING OctoCAD©");
                 design_f.write("\n\n\nEND USER AGREEMENT\n\n\n");
                 design_f.write(license_f.read());

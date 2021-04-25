@@ -1,7 +1,6 @@
 import os;
 import math;
 import pickle;
-import threading;
 from PyQt5 import QtCore, QtGui, QtWidgets;
 from gui.gear.helical.DesignGui import DesignGui;
 from gui.gear.helical.ModelGui import ModelGui;
@@ -9,15 +8,15 @@ from gui.octocad.OutputGui import OutputGui;
 from bin.Utility import Utility;
 from bin.gear.DesignData import DesignData;
 class Helical():
-    def __init__(self,octocadFilesPath,octocadAppdataPath,homeWindow,moduleWindow):
-        self.octocadFilesPath=octocadFilesPath;
-        self.octocadAppdataPath=octocadAppdataPath;
+    def __init__(self,filesPath,appdataPath,homeWindow,moduleWindow):
+        self.filesPath=filesPath;
+        self.appdataPath=appdataPath;
         self.homeWindow=homeWindow;
         self.moduleWindow=moduleWindow;
-        self.octocadHelicalDesignDataPath=self.octocadAppdataPath+"/gear/helical/";
-        os.makedirs(self.octocadHelicalDesignDataPath,exist_ok=True);
-        self.octocadHelicalModelDataPath=self.octocadHelicalDesignDataPath+"model";
-        self.octocadHelicalDesignDataPath+="design";
+        self.designDataPath=self.appdataPath+"/gear/helical/";
+        os.makedirs(self.designDataPath,exist_ok=True);
+        self.modelDataPath=self.designDataPath+"model";
+        self.designDataPath+="design";
     def setupDesignUi(self):
         self.utilityDesign=Utility();
         self.designGui=DesignGui();
@@ -28,7 +27,7 @@ class Helical():
         self.utilityModel.setupDialog(self.modelGui,self.moduleWindow,self.getModelData);
     def setupOutputUi(self):
         title="Design of helical gear";
-        self.utilityDesign.setupOutputUi(title,self.octocadHelicalDesignDataPath);
+        self.utilityDesign.setupOutputUi(title,self.designDataPath);
     def getDesignData(self):
         self.helixAngle=float(self.designGui.helixAngle.text());
         self.gearElasticity=float(self.designGui.gearElasticity.text());
@@ -74,14 +73,11 @@ class Helical():
                 +str(module)+" mm";
         modelData=(gear,profileType,pressureAngle,helixAngle,helixHand,module,\
                     teeth,gearing,faceWidth,clearance,fillet,fileName);
-        with open(self.octocadHelicalModelDataPath,"wb") as model_f:
+        with open(self.modelDataPath,"wb") as model_f:
             pickle.dump(modelData,model_f);
-        command=lambda:os.system("freecad "+self.octocadFilesPath+"/bin/gear/helical/Model.py");
-        thread=threading.Thread(target=command,name="helicalModel");
-        thread.start();
-        self.homeWindow.hide();
-        thread.join();
-        self.homeWindow.show();
+        path=self.filesPath+"/bin/gear/helical/Model.py";
+        name="helicalModel";
+        Utility.runFreecad(path,name,self.homeWindow);
     def evalLoad(self,module):
         faceWidth=10*module;
         pitch=math.pi*module;
@@ -127,8 +123,8 @@ class Helical():
     def createResult(self):
         URL="https://github.com/absdarekar/OctoCAD/blob/"+\
             "master/doc/gear/helical/Technical-Summary.pdf";
-        with open(self.octocadHelicalDesignDataPath,"w") as design_f:
-            with open(self.octocadFilesPath+"/LICENSE.md","r") as license_f:
+        with open(self.designDataPath,"w") as design_f:
+            with open(self.filesPath+"/LICENSE.md","r") as license_f:
                 design_f.write("\n\n\nDESIGN OF HELICAL GEAR GENERATED USING OctoCAD©");
                 design_f.write("\n\n\nEND USER AGREEMENT\n\n\n");
                 design_f.write(license_f.read());

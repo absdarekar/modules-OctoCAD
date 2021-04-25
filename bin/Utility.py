@@ -1,4 +1,5 @@
 import os;
+import threading;
 from PyQt5 import QtCore, QtGui, QtWidgets;
 from gui.octocad.OutputGui import OutputGui;
 class Utility():
@@ -33,3 +34,10 @@ class Utility():
         save=self.outputGui.buttonBox.button(QtWidgets.QDialogButtonBox.Save);
         saveFunction=lambda:Utility.saveFile(file);
         save.clicked.connect(saveFunction);
+    def runFreecad(path,name,homeWindow):
+        command=lambda:os.system("freecad "+path);
+        thread=threading.Thread(target=command,name=name);
+        thread.start();
+        homeWindow.hide();
+        thread.join();
+        homeWindow.show();

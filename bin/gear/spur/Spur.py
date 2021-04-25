@@ -1,7 +1,6 @@
 import os;
 import math;
 import pickle;
-import threading;
 from PyQt5 import QtCore, QtGui, QtWidgets;
 from gui.gear.spur.DesignGui import DesignGui;
 from gui.gear.spur.ModelGui import ModelGui;
@@ -9,15 +8,15 @@ from gui.octocad.OutputGui import OutputGui;
 from bin.Utility import Utility;
 from bin.gear.DesignData import DesignData;
 class Spur():
-    def __init__(self,octocadFilesPath,octocadAppdataPath,homeWindow,moduleWindow):
-        self.octocadFilesPath=octocadFilesPath;
-        self.octocadAppdataPath=octocadAppdataPath;
+    def __init__(self,filesPath,appdataPath,homeWindow,moduleWindow):
+        self.filesPath=filesPath;
+        self.appdataPath=appdataPath;
         self.homeWindow=homeWindow;
         self.moduleWindow=moduleWindow;
-        self.octocadSpurDesignDataPath=self.octocadAppdataPath+"/gear/spur/";
-        os.makedirs(self.octocadSpurDesignDataPath,exist_ok=True);
-        self.octocadSpurModelDataPath=self.octocadSpurDesignDataPath+"model";
-        self.octocadSpurDesignDataPath+="design";
+        self.designDataPath=self.appdataPath+"/gear/spur/";
+        os.makedirs(self.designDataPath,exist_ok=True);
+        self.modelDataPath=self.designDataPath+"model";
+        self.designDataPath+="design";
     def setupDesignUi(self):
         self.utilityDesign=Utility();
         self.designGui=DesignGui();
@@ -28,7 +27,7 @@ class Spur():
         self.utilityModel.setupDialog(self.modelGui,self.moduleWindow,self.getModelData);
     def setupOutputUi(self):
         title="Design of spur gear";
-        self.utilityDesign.setupOutputUi(title,self.octocadSpurDesignDataPath);
+        self.utilityDesign.setupOutputUi(title,self.designDataPath);
     def getDesignData(self):
         self.gearElasticity=float(self.designGui.gearElasticity.text());
         self.gearStrength=float(self.designGui.gearStrength.text());
@@ -68,14 +67,11 @@ class Spur():
         fileName=gear+" "+str(teeth)+" "+str(module*teeth)+" mm "+str(module)+" mm";
         modelData=(gear,profileType,pressureAngle,module,teeth,gearing,faceWidth,\
                     clearance,fillet,fileName);
-        with open(self.octocadSpurModelDataPath,"wb") as model_f:
+        with open(self.modelDataPath,"wb") as model_f:
             pickle.dump(modelData,model_f);
-        command=lambda:os.system("freecad "+self.octocadFilesPath+"/bin/gear/spur/Model.py");
-        thread=threading.Thread(target=command,name="spurModel");
-        thread.start();
-        self.homeWindow.hide();
-        thread.join();
-        self.homeWindow.show();
+        path=self.filesPath+"/bin/gear/spur/Model.py";
+        name="spurModel";
+        Utility.runFreecad(path,name,self.homeWindow);
     def evalLoad(self,module):
         faceWidth=10*module;
         pitch=math.pi*module;
@@ -116,8 +112,8 @@ class Spur():
     def createResult(self):
         URL="https://github.com/absdarekar/OctoCAD/blob/"+\
             "master/doc/gear/spur/Technical-Summary.pdf";
-        with open(self.octocadSpurDesignDataPath,"w") as design_f:
-            with open(self.octocadFilesPath+"/LICENSE.md","r") as license_f:
+        with open(self.designDataPath,"w") as design_f:
+            with open(self.filesPath+"/LICENSE.md","r") as license_f:
                 design_f.write("\n\n\nDESIGN OF SPUR GEAR GENERATED USING OctoCAD©");
                 design_f.write("\n\n\nEND USER AGREEMENT\n\n\n");
                 design_f.write(license_f.read());
