@@ -44,6 +44,8 @@ class Octocad():
         self.moduleGui.spurGear.clicked.connect(self.spurModel.setupModelUi);
         self.helicalModel=Helical(FILES_PATH,APPDATA_PATH,self.homeWindow,self.modelWindow);
         self.moduleGui.helicalGear.clicked.connect(self.helicalModel.setupModelUi);
+        self.bevelModel=Bevel(FILES_PATH,APPDATA_PATH,self.homeWindow,self.modelWindow);
+        # self.moduleGui.bevelGear.clicked.connect(self.bevelModel.setupModelUi);
         # self.wormModel=Worm(FILES_PATH,APPDATA_PATH,self.homeWindow,self.modelWindow);
         # self.moduleGui.wormGear.clicked.connect(self.wormModel.setupModelUi);
 if __name__=="__main__":

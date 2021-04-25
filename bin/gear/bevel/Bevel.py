@@ -57,6 +57,12 @@ class Bevel():
         self.pinionLewisFactor=eval(profile["lewisFactor"]["pinion"]);
         self.pressureAngle=float(profile["pressureAngle"]);
         self.profile=profile["profile"];
+    def getModelData(self):
+        # with open(self.modelDataPath,"wb") as model_f:
+        #     pickle.dump(modelData,model_f);
+        path=self.filesPath+"/bin/gear/bevel/Model.py";
+        name="bevelModel";
+        Utility.runFreecad(path,name,self.homeWindow);
     def evalLoad(self,module):
         coneDistance=math.sqrt(((module*self.pinionTeeth/2)**2)+((module*self.gearTeeth/2)**2));
         self.faceWidth=min(10*module,coneDistance/3);
