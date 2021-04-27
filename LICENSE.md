@@ -1,4 +1,4 @@
-    OctoCAD, version 0.0.17
+    OctoCAD
     
     © 2020-2021 
     
