@@ -1,6 +1,6 @@
 import os;
 import threading;
-from PyQt5 import QtCore, QtGui, QtWidgets;
+from PyQt5 import QtWidgets;
 from gui.octocad.OutputGui import OutputGui;
 class Utility():
     def alignToCenter(argWindow):

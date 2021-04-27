@@ -1,7 +1,6 @@
 import os;
 import math;
 import pickle;
-from PyQt5 import QtCore, QtGui, QtWidgets;
 from gui.gear.helical.DesignGui import DesignGui;
 from gui.gear.helical.ModelGui import ModelGui;
 from gui.octocad.OutputGui import OutputGui;

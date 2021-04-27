@@ -1,6 +1,7 @@
+#!/usr/bin/python3
 import os;
 import sys;
-from PyQt5 import QtCore, QtGui, QtWidgets;
+from PyQt5 import QtWidgets;
 FILES_PATH=os.path.join(os.path.expanduser('~'),'OctoCAD');
 APPDATA_PATH=os.path.join(os.path.expanduser('~'),'.OctoCAD');
 os.makedirs(APPDATA_PATH,exist_ok=True);
@@ -45,7 +46,7 @@ class Octocad():
         self.helicalModel=Helical(FILES_PATH,APPDATA_PATH,self.homeWindow,self.modelWindow);
         self.moduleGui.helicalGear.clicked.connect(self.helicalModel.setupModelUi);
         self.bevelModel=Bevel(FILES_PATH,APPDATA_PATH,self.homeWindow,self.modelWindow);
-        # self.moduleGui.bevelGear.clicked.connect(self.bevelModel.setupModelUi);
+        self.moduleGui.bevelGear.clicked.connect(self.bevelModel.getModelData);
         # self.wormModel=Worm(FILES_PATH,APPDATA_PATH,self.homeWindow,self.modelWindow);
         # self.moduleGui.wormGear.clicked.connect(self.wormModel.setupModelUi);
 if __name__=="__main__":
