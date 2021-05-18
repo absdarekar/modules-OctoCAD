@@ -3,6 +3,7 @@ import math;
 import pickle;
 from gui.gear.bevel.DesignGui import DesignGui;
 from gui.octocad.OutputGui import OutputGui;
+from gui.gear.bevel.ModelGui import ModelGui;
 from bin.Utility import Utility;
 from bin.gear.DesignData import DesignData;
 class Bevel():
@@ -19,10 +20,10 @@ class Bevel():
         self.utilityDesign=Utility();
         self.designGui=DesignGui();
         self.utilityDesign.setupDialog(self.designGui,self.moduleWindow,self.findModule);
-    # def setupModelUi(self):
-    #     self.utilityModel=Utility()
-    #     self.modelGui=ModelGui();
-    #     self.utilityModel.setupDialog(self.modelGui,self.moduleWindow,self.getModelData);
+    def setupModelUi(self):
+        self.utilityModel=Utility()
+        self.modelGui=ModelGui();
+        self.utilityModel.setupDialog(self.modelGui,self.moduleWindow,self.getModelData);
     def setupOutputUi(self):
         title="Design of bevel gear";
         self.utilityDesign.setupOutputUi(title,self.designDataPath);
@@ -57,8 +58,22 @@ class Bevel():
         self.pressureAngle=float(profile["pressureAngle"]);
         self.profile=profile["profile"];
     def getModelData(self):
-        # with open(self.modelDataPath,"wb") as model_f:
-        #     pickle.dump(modelData,model_f);
+        gear="Bevel";
+        profileType=self.modelGui.profile.currentText();
+        speedRatio=float(self.modelGui.speedRatio.text());
+        profile=DesignData.evalProfile(profileType);
+        pressureAngle=float(profile["pressureAngle"]);
+        bottomModule=float(self.modelGui.module.text());
+        teeth=float(self.modelGui.teeth.text());
+        gearing=self.modelGui.gearing.currentText();
+        faceWidth=float(self.modelGui.faceWidth.text());
+        clearance=float(self.modelGui.clearance.text());
+        fillet=float(self.modelGui.fillet.text());
+        fileName=gear+" "+str(teeth)+" "+str(faceWidth)+" mm "+str(bottomModule)+" mm";
+        modelData=(gear,profileType,speedRatio,pressureAngle,bottomModule,teeth,\
+                    gearing,faceWidth,clearance,fillet,fileName);
+        with open(self.modelDataPath,"wb") as model_f:
+            pickle.dump(modelData,model_f);
         path=self.filesPath+"/bin/gear/bevel/Model.py";
         name="bevelModel";
         Utility.runFreecad(path,name,self.homeWindow);

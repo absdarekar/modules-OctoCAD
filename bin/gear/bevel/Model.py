@@ -1,4 +1,5 @@
 import os;
+import pickle;
 import math;
 import numpy;
 import FreeCAD;
@@ -13,29 +14,27 @@ class Model():
     def __init__(self):
         self.status=Status();
         self.status.updateStatus("Initiating data");
-        self.pressureAngle=20
-        self.bottomModule=4
-        self.teeth=18
-        self.gearing=""
-        self.faceWidth=20;
-        self.clearance=0.5;
-        self.fillet=0.25;
-        self.gearRatio=1.25;
+        with open(OCTOCAD_APPDATA_PATH+"/gear/bevel/model","rb") as model_f:
+            self.gear,self.profileType,self.speedRatio,self.pressureAngle,\
+            self.bottomModule,self.teeth,self.gearing,self.faceWidth,\
+            self.clearance,self.fillet,self.fileName=pickle.load(model_f);
         self.status.updateStatus("Calculating pitch angles");
-        self.pinionPitchAngle=math.atan(self.gearRatio);
-        self.gearPitchAngle=math.atan(1/self.gearRatio);
+        self.pinionPitchAngle=math.atan(self.speedRatio);
+        self.gearPitchAngle=math.atan(1/self.speedRatio);
         self.status.updateStatus("Calculating radii of frustrum");
         self.status.updateStatus("Calculating modules of apex");
         self.pinionTopModule=self.bottomModule-\
                             ((2*self.faceWidth*math.sin(self.pinionPitchAngle))/self.teeth);
         self.gearTopModule=self.bottomModule-\
                             ((2*self.faceWidth*math.sin(self.gearPitchAngle))/self.teeth);
+        if(self.pinionTopModule<0.35 or self.gearTopModule<0.35):
+            self.status.updateStatus("Failed to generate bevel gear model, decrease face width");
+            raise Exception("Failed to generate bevel gear model, decrease face width");
         self.status.updateStatus("Calculating frustrum height");
         self.pinionHeight=math.sqrt((self.faceWidth**2-(self.bottomModule*self.teeth/\
                                         2-self.pinionTopModule*self.teeth/2)**2));
         self.gearHeight=math.sqrt((self.faceWidth**2-(self.bottomModule*self.teeth/\
                                         2-self.gearTopModule*self.teeth/2)**2));
-        self.fileName="Bevel"
     def generateModel(self):
         self.status.updateStatus("Defining coordinates");
         ORIGIN=FreeCAD.Vector(0,0,0);

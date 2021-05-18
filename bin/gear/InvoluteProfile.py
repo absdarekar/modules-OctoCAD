@@ -32,6 +32,7 @@ class InvoluteProfile():
         status.updateStatus("Setting precision to 0.001 mm");
         PRECISION=0.001;
         status.updateStatus("Calculating range for involute function");
+        addendumRadius*=1.01;
         ratioAddendum=addendumRadius/baseRadius;
         ratioDedendum=dedendumRadius/baseRadius;
         t=numpy.arange(InvoluteProfile.calculateRange(ratioDedendum),\
