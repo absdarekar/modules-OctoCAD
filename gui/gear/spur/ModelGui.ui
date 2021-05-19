@@ -57,11 +57,6 @@
          <string>20 degree full depth involute tooth</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>20 degree stub involute tooth</string>
-        </property>
-       </item>
       </widget>
      </item>
      <item row="1" column="0">
@@ -110,11 +105,6 @@
      </item>
      <item row="3" column="1">
       <widget class="QComboBox" name="gearing">
-       <item>
-        <property name="text">
-         <string>Internal gearing</string>
-        </property>
-       </item>
        <item>
         <property name="text">
          <string>External gearing</string>
