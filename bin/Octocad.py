@@ -47,8 +47,6 @@ class Octocad():
         self.moduleGui.helicalGear.clicked.connect(self.helicalModel.setupModelUi);
         self.bevelModel=Bevel(FILES_PATH,APPDATA_PATH,self.homeWindow,self.modelWindow);
         self.moduleGui.bevelGear.clicked.connect(self.bevelModel.setupModelUi);
-        # self.wormModel=Worm(FILES_PATH,APPDATA_PATH,self.homeWindow,self.modelWindow);
-        # self.moduleGui.wormGear.clicked.connect(self.wormModel.setupModelUi);
 if __name__=="__main__":
     qApplication=QtWidgets.QApplication(sys.argv);
     octocad=Octocad();

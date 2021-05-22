@@ -88,20 +88,6 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="wormGear">
-          <property name="text">
-           <string>Worm Gear</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="rack">
-          <property name="text">
-           <string>Rack</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
      </widget>

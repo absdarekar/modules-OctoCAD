@@ -43,12 +43,6 @@ class ModuleGui(object):
         self.bevelGear = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
         self.bevelGear.setObjectName("bevelGear")
         self.verticalLayout_2.addWidget(self.bevelGear)
-        self.wormGear = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
-        self.wormGear.setObjectName("wormGear")
-        self.verticalLayout_2.addWidget(self.wormGear)
-        self.rack = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
-        self.rack.setObjectName("rack")
-        self.verticalLayout_2.addWidget(self.rack)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.verticalLayout.addWidget(self.scrollArea)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -63,8 +57,6 @@ class ModuleGui(object):
         self.spurGear.setText(_translate("MainWindow", "Spur Gear"))
         self.helicalGear.setText(_translate("MainWindow", "Helical Gear"))
         self.bevelGear.setText(_translate("MainWindow", "Bevel Gear"))
-        self.wormGear.setText(_translate("MainWindow", "Worm Gear"))
-        self.rack.setText(_translate("MainWindow", "Rack"))
 
 
 if __name__ == "__main__":
